@@ -249,7 +249,7 @@ section { padding: 6rem 4rem; }
   position: relative; line-height: 1.6;
 }
 .exp-bullets li::before {
-  content: 'â€”'; position: absolute; left: 0;
+  content: '\2014'; position: absolute; left: 0;
   color: var(--clay); font-size: 0.8rem;
 }
 .exp-bullets li strong { color: var(--charcoal); font-weight: 500; }
