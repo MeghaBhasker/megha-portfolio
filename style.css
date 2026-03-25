@@ -25,7 +25,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ── NAV ── */
+/* â”€â”€ NAV â”€â”€ */
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
@@ -84,7 +84,7 @@ nav.scrolled { box-shadow: 0 2px 20px rgba(61,53,48,0.08); }
 .nav-hamburger.open span:nth-child(2) { opacity: 0; }
 .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
-/* ── HERO ── */
+/* â”€â”€ HERO â”€â”€ */
 #hero {
   min-height: 100vh;
   display: flex; flex-direction: column; justify-content: center;
@@ -194,7 +194,7 @@ nav.scrolled { box-shadow: 0 2px 20px rgba(61,53,48,0.08); }
   text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.3rem;
 }
 
-/* ── SECTION COMMONS ── */
+/* â”€â”€ SECTION COMMONS â”€â”€ */
 section { padding: 6rem 4rem; }
 
 .section-label {
@@ -212,7 +212,7 @@ section { padding: 6rem 4rem; }
 }
 .section-title em { font-style: italic; color: var(--clay); }
 
-/* ── EXPERIENCE ── */
+/* â”€â”€ EXPERIENCE â”€â”€ */
 #experience { background: var(--warm-white); }
 
 .exp-item {
@@ -249,12 +249,12 @@ section { padding: 6rem 4rem; }
   position: relative; line-height: 1.6;
 }
 .exp-bullets li::before {
-  content: '—'; position: absolute; left: 0;
+  content: 'â€”'; position: absolute; left: 0;
   color: var(--clay); font-size: 0.8rem;
 }
 .exp-bullets li strong { color: var(--charcoal); font-weight: 500; }
 
-/* ── PROJECTS ── */
+/* â”€â”€ PROJECTS â”€â”€ */
 #projects { background: var(--cream); }
 
 .projects-grid {
@@ -301,7 +301,7 @@ section { padding: 6rem 4rem; }
   color: var(--muted); border: 1px solid rgba(140,126,119,0.18);
 }
 
-/* ── SKILLS ── */
+/* â”€â”€ SKILLS â”€â”€ */
 #skills { background: var(--navy); }
 #skills .section-title { color: var(--cream); }
 #skills .section-title em { color: var(--clay); }
@@ -337,7 +337,7 @@ section { padding: 6rem 4rem; }
 }
 .skill-list { font-size: 0.875rem; color: rgba(250,247,242,0.6); line-height: 1.75; }
 
-/* ── CONTACT ── */
+/* â”€â”€ CONTACT â”€â”€ */
 #contact { background: var(--clay); padding: 6rem 4rem; }
 .contact-label { color: rgba(255,255,255,0.5); }
 
@@ -399,7 +399,7 @@ section { padding: 6rem 4rem; }
 }
 .resume-btn:hover { background: var(--clay-dark); transform: translateY(-2px); }
 
-/* ── FOOTER ── */
+/* â”€â”€ FOOTER â”€â”€ */
 footer {
   background: var(--navy); padding: 2rem 4rem;
   display: flex; align-items: center; justify-content: space-between;
@@ -407,7 +407,7 @@ footer {
 .footer-logo { font-family: 'Fraunces', serif; color: var(--clay); font-size: 1rem; font-weight: 500; }
 .footer-copy { font-size: 0.75rem; color: rgba(250,247,242,0.3); }
 
-/* ── ANIMATIONS ── */
+/* â”€â”€ ANIMATIONS â”€â”€ */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(22px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -419,12 +419,12 @@ footer {
 }
 .reveal.visible { opacity: 1; transform: translateY(0); }
 
-/* ── SCROLLBAR ── */
+/* â”€â”€ SCROLLBAR â”€â”€ */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: var(--cream); }
 ::-webkit-scrollbar-thumb { background: var(--clay-light); border-radius: 3px; }
 
-/* ── RESPONSIVE ── */
+/* â”€â”€ RESPONSIVE â”€â”€ */
 @media (max-width: 900px) {
   nav { padding: 1rem 2rem; }
   section { padding: 4.5rem 2rem; }
