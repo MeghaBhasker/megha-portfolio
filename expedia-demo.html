@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Autonomous Operations Platform — Expedia Group Demo · Megha Bhasker</title>
+<meta name="description" content="Interactive product demo: AI-powered autonomous operations platform for Expedia Group covering search pipeline, partner APIs, and pricing automation. Built by Megha Bhasker, AI Product Manager."/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FAFAF8;
+  --surface:#FFFFFF;
+  --surface2:#F7F5F0;
+  --border:#E8E4DC;
+  --border2:#E0DDD8;
+  --text:#1A1A1A;
+  --text2:#555555;
+  --text3:#888888;
+  --navy:#003580;
+  --navy-bg:#EEF4FF;
+  --navy-border:#C5D8F8;
+  --green:#2D7D46;
+  --green-bg:#EEF9F4;
+  --green-border:#C3E8D0;
+  --amber:#9A6200;
+  --amber-bg:#FEF8EE;
+  --amber-border:#FAE5B0;
+  --red:#C0392B;
+  --red-bg:#FEF0EE;
+  --red-border:#FAD4CF;
+  --purple:#5B3DB5;
+  --purple-bg:#F4F0FE;
+  --purple-border:#D4C8F8;
+  --font-sans:'DM Sans',sans-serif;
+  --font-mono:'DM Mono',monospace;
+  --font-serif:'Fraunces',serif;
+}
+html{font-size:14px;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:var(--font-sans);min-height:100vh}
+
+/* PAGE HEADER */
+.page-header{background:var(--surface);border-bottom:1.5px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.page-logo{display:flex;align-items:center;gap:10px}
+.logo-mark{width:32px;height:32px;background:var(--navy);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#fff;letter-spacing:-.5px}
+.logo-name{font-size:13px;font-weight:500;color:var(--text)}
+.logo-sub{font-size:12px;color:var(--text3);margin-top:1px}
+.page-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:500;border:1px solid}
+.pill-navy{background:var(--navy-bg);color:var(--navy);border-color:var(--navy-border)}
+.pill-green{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+.pill-grey{background:var(--surface2);color:var(--text3);border-color:var(--border2)}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* HERO */
+.hero{background:var(--surface);border-bottom:1.5px solid var(--border);padding:2rem 2rem 1.5rem;display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:end}
+.hero-eyebrow{font-size:11px;font-weight:500;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.hero-title{font-family:var(--font-serif);font-size:28px;font-weight:300;color:var(--text);line-height:1.2;margin-bottom:8px}
+.hero-title em{font-style:italic;color:var(--navy)}
+.hero-desc{font-size:13px;color:var(--text2);line-height:1.65;max-width:560px}
+.hero-meta{text-align:right}
+.hm-label{font-size:11px;color:var(--text3);margin-bottom:6px}
+.hm-stack{display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+.tag{display:inline-block;font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;border:1px solid;white-space:nowrap}
+.t-navy{background:var(--navy-bg);color:var(--navy);border-color:var(--navy-border)}
+.t-grn{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+.t-amb{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-border)}
+.t-red{background:var(--red-bg);color:var(--red);border-color:var(--red-border)}
+.t-pur{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-border)}
+.t-gry{background:var(--surface2);color:var(--text3);border-color:var(--border2)}
+
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border-bottom:1.5px solid var(--border)}
+.met{padding:1rem 1.5rem;border-right:1px solid var(--border)}
+.met:last-child{border-right:none}
+.met-val{font-size:24px;font-weight:500;color:var(--text);font-variant-numeric:tabular-nums;transition:all .3s}
+.met-lbl{font-size:11px;color:var(--text3);margin-top:2px}
+.met-delta{font-size:11px;margin-top:4px}
+.up{color:var(--green)}.dn{color:var(--red)}
+
+/* TABS */
+.tabs{background:var(--surface);border-bottom:1.5px solid var(--border);padding:0 2rem;display:flex}
+.tab{padding:10px 16px;font-size:12px;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-1.5px;transition:all .15s;font-weight:500}
+.tab:hover{color:var(--text2)}
+.tab.on{color:var(--navy);border-bottom-color:var(--navy)}
+.pane{display:none;padding:1.5rem 2rem}
+.pane.on{display:block}
+
+/* TOOLBAR */
+.toolbar{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.fbtn{padding:4px 12px;border-radius:20px;border:1px solid var(--border2);font-size:11px;cursor:pointer;background:var(--surface);color:var(--text3);transition:all .15s;font-family:var(--font-sans)}
+.fbtn:hover{border-color:var(--navy);color:var(--navy)}
+.fbtn.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.domain-badge{display:inline-flex;align-items:center;padding:1px 7px;border-radius:8px;font-size:10px;font-weight:500;border:1px solid}
+.db-search{background:var(--navy-bg);color:var(--navy);border-color:var(--navy-border)}
+.db-partner{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-border)}
+.db-pricing{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-border)}
+.db-booking{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+
+/* QUEUE */
+.queue{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px;background:var(--surface)}
+.qhdr{display:grid;grid-template-columns:22px 1fr 74px 56px 82px 90px;gap:8px;padding:8px 14px;background:var(--surface2);font-size:10px;font-weight:500;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--border)}
+.qrow{display:grid;grid-template-columns:22px 1fr 74px 56px 82px 90px;gap:8px;padding:9px 14px;border-top:1px solid #F0EDE8;align-items:center;cursor:pointer;transition:background .1s;background:var(--surface)}
+.qrow:hover{background:var(--surface2)}
+.qrow.sel{background:var(--navy-bg)}
+.qrow.resolved{opacity:.25;pointer-events:none}
+.pri{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;flex-shrink:0}
+.p1{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.p2{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.p3{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.exc-type{font-size:12px;font-weight:500;color:var(--text)}
+.exc-sub{font-size:11px;color:var(--text3);margin-top:1px}
+.amt{font-size:11px;font-weight:500;text-align:right;font-variant-numeric:tabular-nums}
+.timer{font-size:11px;text-align:right;font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.cbar-w{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:3px}
+.cbar{height:100%;border-radius:2px}
+
+/* DETAIL */
+.detail{border:1px solid var(--border2);border-radius:10px;padding:1.25rem;margin-bottom:14px;background:var(--surface);display:none}
+.detail.open{display:block}
+.dh{display:flex;align-items:start;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.dt{font-size:14px;font-weight:500;color:var(--text)}
+.dsub{font-size:11px;color:var(--text3);margin-top:2px;font-family:var(--font-mono)}
+.ai-box{background:var(--navy-bg);border-radius:8px;padding:10px 14px;margin:10px 0;border:1px solid var(--navy-border)}
+.ai-lbl{font-size:10px;font-weight:500;color:var(--navy);letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+.ai-text{font-size:12px;color:#1A4A8A;line-height:1.6}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.field{background:var(--surface2);border-radius:8px;padding:8px 10px;border:0.5px solid var(--border)}
+.fl{font-size:10px;color:var(--text3);margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+.fv{font-size:12px;font-weight:500;color:var(--text)}
+.actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.btn-a{padding:7px 14px;border-radius:8px;border:1px solid var(--green-border);background:var(--green-bg);color:var(--green);font-size:12px;font-weight:500;cursor:pointer;font-family:var(--font-sans);transition:opacity .15s}
+.btn-r{padding:7px 14px;border-radius:8px;border:1px solid var(--red-border);background:var(--red-bg);color:var(--red);font-size:12px;font-weight:500;cursor:pointer;font-family:var(--font-sans)}
+.btn-e{padding:7px 14px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);color:var(--text3);font-size:12px;cursor:pointer;font-family:var(--font-sans)}
+.toast{font-size:12px;color:var(--green);background:var(--green-bg);border-radius:8px;padding:8px 12px;margin-top:8px;display:none;border:1px solid var(--green-border);font-family:var(--font-mono)}
+.toast.show{display:block}
+
+/* OTHER */
+.sh{font-size:10px;font-weight:500;letter-spacing:.07em;color:var(--text3);text-transform:uppercase;margin:0 0 10px}
+.health-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:14px}
+.hcard{border:1px solid var(--border);border-radius:10px;padding:10px 12px;background:var(--surface)}
+.hcard-name{font-size:11px;color:var(--text3);margin-bottom:4px;font-weight:500}
+.hcard-val{font-size:20px;font-weight:500;margin-bottom:2px}
+.hcard-sub{font-size:10px;color:var(--text3)}
+.bar-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #F0EDE8;font-size:12px}
+.bar-row:last-child{border-bottom:none}
+.bw{flex:1;height:4px;background:var(--border);border-radius:3px;overflow:hidden}
+.bf{height:100%;border-radius:3px}
+.arow{display:flex;gap:8px;align-items:start;padding:7px 0;border-bottom:1px solid #F0EDE8;font-size:12px}
+.arow:last-child{border-bottom:none}
+.atime{color:#AAA;font-family:var(--font-mono);min-width:42px;font-size:11px;padding-top:1px;flex-shrink:0}
+.amsg{color:var(--text2);line-height:1.45}
+.partner-row{display:grid;grid-template-columns:110px 1fr 68px 72px 70px;gap:8px;padding:8px 14px;border-top:1px solid #F0EDE8;align-items:center;font-size:12px;background:var(--surface)}
+.alert-bar{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--amber);margin-top:10px}
+
+/* FOOTER */
+.page-footer{background:var(--surface);border-top:1.5px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.pf-left{font-size:12px;color:var(--text3)}
+.pf-left span{color:var(--text2)}
+.pf-links{display:flex;gap:16px}
+.pf-links a{font-size:12px;color:var(--text3);text-decoration:none}
+.pf-links a:hover{color:var(--navy)}
+
+@media(max-width:640px){
+  .metrics{grid-template-columns:1fr 1fr}
+  .met{border-right:none;border-bottom:1px solid var(--border)}
+  .hero{grid-template-columns:1fr}
+  .hero-meta{text-align:left}
+  .hm-stack{align-items:flex-start}
+  .qhdr,.qrow{grid-template-columns:20px 1fr 60px 48px}
+  .qhdr>*:nth-child(5),.qhdr>*:nth-child(6),.qrow>*:nth-child(5),.qrow>*:nth-child(6){display:none}
+  .pane{padding:1rem}
+  .page-header,.hero,.tabs{padding-left:1rem;padding-right:1rem}
+  .fields{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="page-logo">
+    <div class="logo-mark">MB</div>
+    <div>
+      <div class="logo-name">Megha Bhasker</div>
+      <div class="logo-sub">AI Product Manager · meghabhasker.me</div>
+    </div>
+  </div>
+  <div class="page-meta">
+    <span class="pill pill-navy">Product case study</span>
+    <span class="pill pill-green"><span class="live-dot"></span> Live demo</span>
+    <span class="pill pill-grey">Expedia Group</span>
+  </div>
+</header>
+
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow">Autonomous operations · Search · Partner APIs · Pricing · Booking</div>
+    <h1 class="hero-title">Autonomous operations<br/><em>for travel infrastructure</em></h1>
+    <p class="hero-desc">An interactive demo of an AI-powered operations platform that self-heals travel infrastructure incidents — reducing manual intervention, protecting revenue, and detecting failures before they impact travelers. Built as a product case study for Expedia Group's Autonomous Operations PM role.</p>
+  </div>
+  <div class="hero-meta">
+    <div class="hm-label">Built by</div>
+    <div class="hm-stack">
+      <span class="tag t-navy">AI Product Manager</span>
+      <span class="tag t-gry">3+ yrs shipping AI systems</span>
+      <a href="https://meghabhasker.me" style="text-decoration:none"><span class="tag t-gry">meghabhasker.me ↗</span></a>
+    </div>
+  </div>
+</section>
+
+<div class="metrics">
+  <div class="met"><div class="met-val" id="m-inc">3</div><div class="met-lbl">Active incidents</div><div class="met-delta dn">+2 vs last hour</div></div>
+  <div class="met"><div class="met-val">99.94%</div><div class="met-lbl">Platform availability</div><div class="met-delta up">Above 99.9% SLA</div></div>
+  <div class="met"><div class="met-val" id="m-auto">18</div><div class="met-lbl">Auto-remediated today</div><div class="met-delta up">76% auto-resolve rate</div></div>
+  <div class="met"><div class="met-val">$2.4M</div><div class="met-lbl">Revenue protected</div><div class="met-delta up">via self-healing engine</div></div>
+</div>
+
+<div class="tabs">
+  <div class="tab on" onclick="showPane('ip',this)">Incident queue</div>
+  <div class="tab" onclick="showPane('hp',this)">Platform health</div>
+  <div class="tab" onclick="showPane('pp',this)">Partner APIs</div>
+  <div class="tab" onclick="showPane('ap',this)">Audit trail</div>
+</div>
+
+<div id="ip" class="pane on">
+  <div class="toolbar">
+    <button class="fbtn on" onclick="filt('all',this)">All (8)</button>
+    <button class="fbtn" onclick="filt('search',this)">Search pipeline</button>
+    <button class="fbtn" onclick="filt('partner',this)">Partner APIs</button>
+    <button class="fbtn" onclick="filt('pricing',this)">Pricing</button>
+    <button class="fbtn" onclick="filt('booking',this)">Booking</button>
+  </div>
+
+  <div class="queue">
+    <div class="qhdr"><div></div><div>Incident</div><div style="text-align:right">Impact/hr</div><div style="text-align:right">Age</div><div>AI confidence</div><div>Action</div></div>
+
+    <div class="qrow" onclick="sel(this,0)" id="r0" data-type="search">
+      <div class="pri p1">1</div>
+      <div><div style="display:flex;align-items:center;gap:6px"><div class="exc-type">Search latency spike</div><span class="domain-badge db-search">Search</span></div><div class="exc-sub">Hotel search · APAC · p99 4,200ms</div></div>
+      <div class="amt" style="color:var(--red)">$180K</div>
+      <div class="timer" style="color:var(--red)" id="t0">0:08:14</div>
+      <div><div style="font-size:11px;color:var(--text3)">91% — reroute</div><div class="cbar-w"><div class="cbar" style="width:91%;background:var(--green)"></div></div></div>
+      <div><span class="tag t-grn">Auto-remediate</span></div>
+    </div>
+
+    <div class="qrow" onclick="sel(this,1)" id="r1" data-type="partner">
+      <div class="pri p1">2</div>
+      <div><div style="display:flex;align-items:center;gap:6px"><div class="exc-type">Partner API timeout</div><span class="domain-badge db-partner">Partner</span></div><div class="exc-sub">Hilton supply feed · 23% error rate</div></div>
+      <div class="amt" style="color:var(--red)">$95K</div>
+      <div class="timer" style="color:var(--red)" id="t1">0:14:32</div>
+      <div><div style="font-size:11px;color:var(--text3)">87% — fallback</div><div class="cbar-w"><div class="cbar" style="width:87%;background:var(--green)"></div></div></div>
+      <div><span class="tag t-grn">Auto-remediate</span></div>
+    </div>
+
+    <div class="qrow" onclick="sel(this,2)" id="r2" data-type="pricing">
+      <div class="pri p1">3</div>
+      <div><div style="display:flex;align-items:center;gap:6px"><div class="exc-type">Pricing anomaly detected</div><span class="domain-badge db-pricing">Pricing</span></div><div class="exc-sub">LAX-LHR flights · +340% rate spike</div></div>
+      <div class="amt" style="color:var(--red)">$420K</div>
+      <div class="timer" id="t2">0:03:45</div>
+      <div><div style="font-size:11px;color:var(--text3)">74% — review</div><div class="cbar-w"><div class="cbar" style="width:74%;background:#EF9F27"></div></div></div>
+      <div><span class="tag t-red">Review needed</span></div>
+    </div>
+
+    <div class="qrow" onclick="sel(this,3)" id="r3" data-type="booking">
+      <div class="pri p2">4</div>
+      <div><div style="display:flex;align-items:center;gap:6px"><div class="exc-type">Booking confirmation delay</div><span class="domain-badge db-booking">Booking</span></div><div class="exc-sub">Vrbo · SLA breach in 8 min</div></div>
+      <div class="amt">$42K</div>
+      <div class="timer" id="t3">0:22:18</div>
+      <div><div style="font-size:11px;color:var(--text3)">95% — retry queue</div><div class="cbar-w"><div class="cbar" style="width:95%;background:var(--green)"></div></div></div>
+      <div><span class="tag t-grn">Auto-remediate</span></div>
+    </div>
+
+    <div class="qrow" onclick="sel(this,4)" id="r4" data-type="partner">
+      <div class="pri p2">5</div>
+      <div><div style="display:flex;align-items:center;gap:6px"><div class="exc-type">Inventory sync lag</div><span class="domain-badge db-partner">Partner</span></div><div class="exc-sub">Marriott · 18 min delay vs 2 min SLA</div></div>
+      <div class="amt">$28K</div>
+      <div class="timer" id="t4">0:31:05</div>
+      <div><div style="font-size:11px;color:var(--text3)">82% — cache serve</div><div class="cbar-w"><div class="cbar" style="width:82%;background:var(--green)"></div></div></div>
+      <div><span class="tag t-grn">Auto-remediate</span></div>
+    </div>
+
+    <div class="qrow" onclick="sel(this,5)" id="r5" data-type="search">
+      <div class="pri p2">6</div>
+      <div><div style="display:flex;align-items:center;gap:6px"><div class="exc-type">Search index stale</div><span class="domain-badge db-search">Search</span></div><div class="exc-sub">Caribbean hotels · last indexed 4h ago</div></div>
+      <div class="amt">$15K</div>
+      <div class="timer" id="t5">0:44:12</div>
+      <div><div style="font-size:11px;color:var(--text3)">89% — reindex</div><div class="cbar-w"><div class="cbar" style="width:89%;background:var(--green)"></div></div></div>
+      <div><span class="tag t-grn">Auto-remediate</span></div>
+    </div>
+
+    <div class="qrow" onclick="sel(this,6)" id="r6" data-type="pricing">
+      <div class="pri p3">7</div>
+      <div><div style="display:flex;align-items:center;gap:6px"><div class="exc-type">Predictive: rate cache expiry</div><span class="domain-badge db-pricing">Pricing</span></div><div class="exc-sub">Europe rail · cache expires in 12 min</div></div>
+      <div class="amt">$8K risk</div>
+      <div class="timer" id="t6">0:12:00</div>
+      <div><div style="font-size:11px;color:var(--text3)">93% — pre-warm</div><div class="cbar-w"><div class="cbar" style="width:93%;background:var(--green)"></div></div></div>
+      <div><span class="tag t-pur">Predictive</span></div>
+    </div>
+
+    <div class="qrow" onclick="sel(this,7)" id="r7" data-type="booking">
+      <div class="pri p3">8</div>
+      <div><div style="display:flex;align-items:center;gap:6px"><div class="exc-type">Payment gateway degraded</div><span class="domain-badge db-booking">Booking</span></div><div class="exc-sub">EMEA checkout · Adyen 3% failure</div></div>
+      <div class="amt">$55K</div>
+      <div class="timer" id="t7">0:07:33</div>
+      <div><div style="font-size:11px;color:var(--text3)">78% — monitoring</div><div class="cbar-w"><div class="cbar" style="width:78%;background:#EF9F27"></div></div></div>
+      <div><span class="tag t-amb">Monitor</span></div>
+    </div>
+  </div>
+
+  <div class="detail" id="d0">
+    <div class="dh"><div><div class="dt">Search latency spike — Hotel search APAC <span class="tag t-red" style="margin-left:8px">P1 · Active</span></div><div class="dsub">INC-2026-05-07-0841</div></div><span class="tag t-grn">91% · auto-remediating</span></div>
+    <div class="ai-box"><div class="ai-lbl">AI triage · autonomous operations engine</div><div class="ai-text">p99 latency at 4,200ms vs 800ms SLA. Root cause: overloaded index shard on APAC cluster-3. Pattern match: 14 identical incidents — all resolved by traffic reroute. Revenue impact: $180K/hr. Auto-remediation: rerouting 60% APAC traffic to cluster-1/2. ETA to resolution: 4 minutes.</div></div>
+    <div class="fields">
+      <div class="field"><div class="fl">Service</div><div class="fv">Hotel search · APAC</div></div>
+      <div class="field"><div class="fl">p99 latency</div><div class="fv" style="color:var(--red)">4,200ms (SLA: 800ms)</div></div>
+      <div class="field"><div class="fl">Root cause</div><div class="fv">Overloaded index shard</div></div>
+      <div class="field"><div class="fl">Prior occurrences</div><div class="fv">14 — all auto-resolved</div></div>
+      <div class="field"><div class="fl">Revenue impact</div><div class="fv" style="color:var(--red)">$180K/hr</div></div>
+      <div class="field"><div class="fl">Auto-action</div><div class="fv" style="color:var(--green)">Traffic reroute initiated</div></div>
+    </div>
+    <div class="actions"><button class="btn-a" onclick="res(0,'Auto-remediation approved — traffic rerouted to cluster-1/2')">Approve auto-remediation</button><button class="btn-e" onclick="res(0,'Escalated to SRE team')">Escalate to SRE</button></div>
+    <div class="toast" id="tk0"></div>
+  </div>
+
+  <div class="detail" id="d1">
+    <div class="dh"><div><div class="dt">Partner API timeout — Hilton <span class="tag t-red" style="margin-left:8px">P1 · Active</span></div><div class="dsub">INC-2026-05-07-0732 · Partner: Hilton Worldwide</div></div><span class="tag t-grn">87% · fallback active</span></div>
+    <div class="ai-box"><div class="ai-lbl">AI triage · partner reliability engine</div><div class="ai-text">Hilton feed returning 23% timeouts — SLA requires &lt;2%. Autonomous fallback: serving cached inventory from 14 minutes ago. Staleness risk: low (&lt;3% change in 15-min window). Partner engineering auto-alerted via webhook. Estimated resolution: 25 minutes.</div></div>
+    <div class="fields">
+      <div class="field"><div class="fl">Error rate</div><div class="fv" style="color:var(--red)">23% (SLA: &lt;2%)</div></div>
+      <div class="field"><div class="fl">Fallback</div><div class="fv" style="color:var(--green)">Cached · 14 min old</div></div>
+      <div class="field"><div class="fl">Staleness risk</div><div class="fv">Low (&lt;3% change rate)</div></div>
+      <div class="field"><div class="fl">Partner notified</div><div class="fv" style="color:var(--green)">Auto-webhook sent</div></div>
+    </div>
+    <div class="actions"><button class="btn-a" onclick="res(1,'Fallback confirmed — partner alerted')">Confirm fallback</button><button class="btn-r" onclick="res(1,'Hilton inventory pulled from search')">Pull from search</button><button class="btn-e" onclick="res(1,'Escalated to partner success')">Escalate</button></div>
+    <div class="toast" id="tk1"></div>
+  </div>
+
+  <div class="detail" id="d2">
+    <div class="dh"><div><div class="dt">Pricing anomaly — LAX-LHR flights <span class="tag t-red" style="margin-left:8px">P1 · Auto-frozen</span></div><div class="dsub">INC-2026-05-07-0914 · Guardrail triggered 3:45 ago</div></div><span class="tag t-amb">74% · review required</span></div>
+    <div class="ai-box"><div class="ai-lbl">AI triage · pricing guardrail engine</div><div class="ai-text">LAX-LHR economy at $4,200 vs $1,240 baseline (+340%). Top hypothesis: currency API error (68%). Rates auto-frozen — confidence below threshold for $420K/hr exposure. Do not unfreeze without root cause confirmation.</div></div>
+    <div class="fields">
+      <div class="field"><div class="fl">Anomalous rate</div><div class="fv" style="color:var(--red)">$4,200 (baseline $1,240)</div></div>
+      <div class="field"><div class="fl">Deviation</div><div class="fv" style="color:var(--red)">+340%</div></div>
+      <div class="field"><div class="fl">Status</div><div class="fv" style="color:var(--amber)">Auto-frozen by guardrail</div></div>
+      <div class="field"><div class="fl">Top hypothesis</div><div class="fv">Currency API error (68%)</div></div>
+    </div>
+    <div class="actions"><button class="btn-a" onclick="res(2,'Currency error confirmed — rates corrected')">Confirm currency error</button><button class="btn-e" onclick="res(2,'Demand surge confirmed — unfrozen')">Confirm demand surge</button><button class="btn-r" onclick="res(2,'Escalated to pricing engineering')">Escalate</button></div>
+    <div class="toast" id="tk2"></div>
+  </div>
+
+  <div class="detail" id="d3">
+    <div class="dh"><div><div class="dt">Booking delay — Vrbo confirmations <span class="tag t-amb" style="margin-left:8px">P2</span></div><div class="dsub">INC-2026-05-07-0603 · SLA breach in ~8 min</div></div><span class="tag t-grn">95% · auto-resolving</span></div>
+    <div class="ai-box"><div class="ai-lbl">AI triage · booking reliability engine</div><div class="ai-text">Confirmations delayed 8-22 min vs 2-min SLA. Notification queue backed up by batch job conflict. Auto-remediation: moved to priority queue. ETA: 6 minutes. 8 prior identical incidents — all auto-resolved.</div></div>
+    <div class="fields">
+      <div class="field"><div class="fl">Delay range</div><div class="fv" style="color:var(--amber)">8-22 min (SLA: 2 min)</div></div>
+      <div class="field"><div class="fl">SLA breach in</div><div class="fv" style="color:var(--red)">~8 minutes</div></div>
+      <div class="field"><div class="fl">Auto-action</div><div class="fv" style="color:var(--green)">Priority queue escalation</div></div>
+      <div class="field"><div class="fl">Prior instances</div><div class="fv">8 — all resolved</div></div>
+    </div>
+    <div class="actions"><button class="btn-a" onclick="res(3,'Priority queue confirmed — ETA 6 min')">Approve auto-fix</button><button class="btn-e" onclick="res(3,'Escalated to Vrbo engineering')">Escalate</button></div>
+    <div class="toast" id="tk3"></div>
+  </div>
+
+  <div class="detail" id="d4">
+    <div class="dh"><div><div class="dt">Inventory sync lag — Marriott <span class="tag t-amb" style="margin-left:8px">P2</span></div><div class="dsub">INC-2026-05-07-0521 · Cache serving</div></div><span class="tag t-grn">82% · cache active</span></div>
+    <div class="ai-box"><div class="ai-lbl">AI triage · partner sync engine</div><div class="ai-text">Marriott sync delayed 18 min — partner rate limiter throttling after routine update. Serving 18-min-old cache. Overbooking risk: 1.2% (threshold: 2%). Buffer reduced 5%. Retry every 90 seconds.</div></div>
+    <div class="fields">
+      <div class="field"><div class="fl">Sync lag</div><div class="fv" style="color:var(--amber)">18 min (SLA: 2 min)</div></div>
+      <div class="field"><div class="fl">Overbooking risk</div><div class="fv" style="color:var(--green)">1.2% (threshold 2%)</div></div>
+      <div class="field"><div class="fl">Auto-action</div><div class="fv">Buffer reduced 5%</div></div>
+      <div class="field"><div class="fl">Cause</div><div class="fv">Partner rate limiter</div></div>
+    </div>
+    <div class="actions"><button class="btn-a" onclick="res(4,'Cache strategy confirmed — retry active')">Confirm cache strategy</button><button class="btn-r" onclick="res(4,'Marriott inventory suspended')">Suspend inventory</button></div>
+    <div class="toast" id="tk4"></div>
+  </div>
+
+  <div class="detail" id="d5">
+    <div class="dh"><div><div class="dt">Search index stale — Caribbean hotels <span class="tag t-amb" style="margin-left:8px">P2</span></div><div class="dsub">INC-2026-05-07-0218 · Last indexed 4h 44m ago</div></div><span class="tag t-grn">89% · reindex queued</span></div>
+    <div class="ai-box"><div class="ai-lbl">AI triage · search freshness engine</div><div class="ai-text">Caribbean index 4h 44m old vs 30-min SLA. Cause: reindex job failed on node-7 (memory exhaustion). Force reindex queued on node-8. ETA: 14 minutes. No overbooking risk — booking engine uses live inventory.</div></div>
+    <div class="fields">
+      <div class="field"><div class="fl">Index age</div><div class="fv" style="color:var(--amber)">4h 44m (SLA: 30 min)</div></div>
+      <div class="field"><div class="fl">Reindex on</div><div class="fv" style="color:var(--green)">node-8 · healthy</div></div>
+      <div class="field"><div class="fl">ETA</div><div class="fv">~14 minutes</div></div>
+      <div class="field"><div class="fl">Overbooking risk</div><div class="fv" style="color:var(--green)">None</div></div>
+    </div>
+    <div class="actions"><button class="btn-a" onclick="res(5,'Force reindex approved on node-8')">Approve reindex</button><button class="btn-e" onclick="res(5,'Escalated to search infrastructure')">Escalate</button></div>
+    <div class="toast" id="tk5"></div>
+  </div>
+
+  <div class="detail" id="d6">
+    <div class="dh"><div><div class="dt">Predictive alert — Europe rail cache <span class="tag t-pur" style="margin-left:8px">Predictive</span></div><div class="dsub">PRED-2026-05-07-1423 · Expiry T-12min</div></div><span class="tag t-grn">93% · pre-warming</span></div>
+    <div class="ai-box"><div class="ai-lbl">AI predictive engine · proactive detection</div><div class="ai-text">Europe rail pricing cache expires in 12 minutes. Hit rate will drop from 94% to ~20% for 8 minutes causing 4x latency spike. Pre-warm initiated: top 500 routes refreshing. Completes in 9 minutes — 3-minute buffer.</div></div>
+    <div class="fields">
+      <div class="field"><div class="fl">Cache expires</div><div class="fv" style="color:var(--amber)">In 12 minutes</div></div>
+      <div class="field"><div class="fl">Pre-warm ETA</div><div class="fv" style="color:var(--green)">9 min (3 min buffer)</div></div>
+      <div class="field"><div class="fl">Risk without action</div><div class="fv" style="color:var(--red)">Hit rate drops to 20%</div></div>
+      <div class="field"><div class="fl">Routes refreshing</div><div class="fv">Top 500 Europe rail</div></div>
+    </div>
+    <div class="actions"><button class="btn-a" onclick="res(6,'Pre-warm approved — refresh in progress')">Approve pre-warm</button><button class="btn-e" onclick="res(6,'Manual cache refresh triggered')">Override to manual</button></div>
+    <div class="toast" id="tk6"></div>
+  </div>
+
+  <div class="detail" id="d7">
+    <div class="dh"><div><div class="dt">Payment gateway degraded — EMEA <span class="tag t-amb" style="margin-left:8px">P2 · Monitor</span></div><div class="dsub">INC-2026-05-07-0807 · Gateway: Adyen EMEA</div></div><span class="tag t-amb">78% · monitoring</span></div>
+    <div class="ai-box"><div class="ai-lbl">AI triage · payment reliability engine</div><div class="ai-text">Adyen EMEA at 3% failure — above 1% alert, below 5% auto-reroute threshold. Pattern ambiguous: transient noise (60%) vs degradation (40%). Auto-reroute to Stripe EMEA triggers at 5%. Revenue impact: $55K/hr.</div></div>
+    <div class="fields">
+      <div class="field"><div class="fl">Failure rate</div><div class="fv" style="color:var(--amber)">3% (auto-reroute at 5%)</div></div>
+      <div class="field"><div class="fl">Fallback ready</div><div class="fv" style="color:var(--green)">Stripe EMEA · standby</div></div>
+      <div class="field"><div class="fl">Assessment</div><div class="fv">Transient noise (60%)</div></div>
+      <div class="field"><div class="fl">Revenue impact</div><div class="fv">$55K/hr</div></div>
+    </div>
+    <div class="actions"><button class="btn-a" onclick="res(7,'Manual reroute to Stripe EMEA')">Force reroute to Stripe</button><button class="btn-e" onclick="res(7,'Monitoring — auto-reroute at 5%')">Keep monitoring</button></div>
+    <div class="toast" id="tk7"></div>
+  </div>
+</div>
+
+<div id="hp" class="pane">
+  <div class="sh">Platform health — real time</div>
+  <div class="health-grid">
+    <div class="hcard"><div class="hcard-name">Hotel search</div><div class="hcard-val" style="color:var(--amber)">4,200ms</div><div class="hcard-sub">p99 · SLA 800ms</div></div>
+    <div class="hcard"><div class="hcard-name">Flight search</div><div class="hcard-val" style="color:var(--green)">620ms</div><div class="hcard-sub">p99 · healthy</div></div>
+    <div class="hcard"><div class="hcard-name">Vrbo booking</div><div class="hcard-val" style="color:var(--amber)">18 min</div><div class="hcard-sub">confirmation delay</div></div>
+    <div class="hcard"><div class="hcard-name">EMEA checkout</div><div class="hcard-val" style="color:var(--amber)">3%</div><div class="hcard-sub">payment failure rate</div></div>
+    <div class="hcard"><div class="hcard-name">Availability API</div><div class="hcard-val" style="color:var(--green)">99.97%</div><div class="hcard-sub">uptime · healthy</div></div>
+    <div class="hcard"><div class="hcard-name">LAX-LHR price</div><div class="hcard-val" style="color:var(--red)">FROZEN</div><div class="hcard-sub">anomaly guardrail</div></div>
+    <div class="hcard"><div class="hcard-name">Partner sync SLA</div><div class="hcard-val" style="color:var(--amber)">82%</div><div class="hcard-sub">on-time compliance</div></div>
+    <div class="hcard"><div class="hcard-name">Search freshness</div><div class="hcard-val" style="color:var(--amber)">4h 44m</div><div class="hcard-sub">Caribbean stale</div></div>
+  </div>
+  <div class="sh">Self-healing engine — today</div>
+  <div style="border:1px solid var(--border);border-radius:10px;padding:0.75rem 1.25rem;background:var(--surface)">
+    <div class="bar-row"><div style="min-width:160px;color:var(--text2)">Auto-resolved</div><div class="bw"><div class="bf" style="width:76%;background:var(--green)"></div></div><div style="min-width:30px;text-align:right;font-weight:500">18</div></div>
+    <div class="bar-row"><div style="min-width:160px;color:var(--text2)">Human review required</div><div class="bw"><div class="bf" style="width:21%;background:#EF9F27"></div></div><div style="min-width:30px;text-align:right;font-weight:500">5</div></div>
+    <div class="bar-row"><div style="min-width:160px;color:var(--text2)">Escalated to SRE</div><div class="bw"><div class="bf" style="width:8%;background:#E24B4A"></div></div><div style="min-width:30px;text-align:right;font-weight:500">2</div></div>
+    <div class="bar-row"><div style="min-width:160px;color:var(--text2)">Predictive (prevented)</div><div class="bw"><div class="bf" style="width:25%;background:#7F77DD"></div></div><div style="min-width:30px;text-align:right;font-weight:500">6</div></div>
+  </div>
+</div>
+
+<div id="pp" class="pane">
+  <div class="sh">Partner API health — top supply partners</div>
+  <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px;background:var(--surface)">
+    <div style="display:grid;grid-template-columns:110px 1fr 68px 72px 70px;gap:8px;padding:8px 14px;background:var(--surface2);font-size:10px;font-weight:500;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--border)">
+      <div>Partner</div><div>7-day availability</div><div style="text-align:right">Error rate</div><div style="text-align:right">Sync lag</div><div style="text-align:right">Status</div>
+    </div>
+    <div class="partner-row"><div style="font-weight:500">Hilton</div><div><div style="height:3px;background:var(--border);border-radius:2px;overflow:hidden"><div style="width:77%;height:100%;background:#E24B4A;border-radius:2px"></div></div></div><div style="text-align:right;color:var(--red);font-weight:500">23%</div><div style="text-align:right;color:var(--text3)">14 min</div><div style="text-align:right"><span class="tag t-red">Degraded</span></div></div>
+    <div class="partner-row"><div style="font-weight:500">Marriott</div><div><div style="height:3px;background:var(--border);border-radius:2px;overflow:hidden"><div style="width:88%;height:100%;background:#EF9F27;border-radius:2px"></div></div></div><div style="text-align:right;color:var(--amber);font-weight:500">0.8%</div><div style="text-align:right;color:var(--amber)">18 min</div><div style="text-align:right"><span class="tag t-amb">Lagging</span></div></div>
+    <div class="partner-row"><div style="font-weight:500">IHG</div><div><div style="height:3px;background:var(--border);border-radius:2px;overflow:hidden"><div style="width:99%;height:100%;background:var(--green);border-radius:2px"></div></div></div><div style="text-align:right;color:var(--green);font-weight:500">0.2%</div><div style="text-align:right;color:var(--green)">1.4 min</div><div style="text-align:right"><span class="tag t-grn">Healthy</span></div></div>
+    <div class="partner-row"><div style="font-weight:500">Hyatt</div><div><div style="height:3px;background:var(--border);border-radius:2px;overflow:hidden"><div style="width:99%;height:100%;background:var(--green);border-radius:2px"></div></div></div><div style="text-align:right;color:var(--green);font-weight:500">0.4%</div><div style="text-align:right;color:var(--green)">1.8 min</div><div style="text-align:right"><span class="tag t-grn">Healthy</span></div></div>
+    <div class="partner-row"><div style="font-weight:500">Accor</div><div><div style="height:3px;background:var(--border);border-radius:2px;overflow:hidden"><div style="width:97%;height:100%;background:var(--green);border-radius:2px"></div></div></div><div style="text-align:right;color:var(--green);font-weight:500">0.6%</div><div style="text-align:right;color:var(--green)">2.1 min</div><div style="text-align:right"><span class="tag t-grn">Healthy</span></div></div>
+    <div class="partner-row"><div style="font-weight:500">Delta Airlines</div><div><div style="height:3px;background:var(--border);border-radius:2px;overflow:hidden"><div style="width:99%;height:100%;background:var(--green);border-radius:2px"></div></div></div><div style="text-align:right;color:var(--green);font-weight:500">0.1%</div><div style="text-align:right;color:var(--green)">0.8 min</div><div style="text-align:right"><span class="tag t-grn">Healthy</span></div></div>
+  </div>
+  <div class="alert-bar">Hilton SLA breach active — fallback inventory serving. Auto-escalation to partner success sent at 14:32. Next sync retry in 90 seconds.</div>
+</div>
+
+<div id="ap" class="pane">
+  <div class="sh">Autonomous operations audit trail — today</div>
+  <div style="border:1px solid var(--border);border-radius:10px;padding:0.75rem 1.25rem;background:var(--surface)">
+    <div id="alog">
+      <div class="arow"><div class="atime">14:41</div><div class="amsg">Auto-remediated: Heathrow hotel search timeout · traffic rerouted cluster-3 to cluster-1 · p99 restored 720ms · $43K revenue protected</div></div>
+      <div class="arow"><div class="atime">14:38</div><div class="amsg">Predictive: Europe rail cache pre-warm initiated · 500 routes · expiry T-12min</div></div>
+      <div class="arow"><div class="atime">14:32</div><div class="amsg">Partner alert: Hilton supply feed degradation · webhook sent · fallback inventory activated</div></div>
+      <div class="arow"><div class="atime">14:28</div><div class="amsg">Pricing guardrail triggered: LAX-LHR +340% anomaly · rates auto-frozen · human review queued</div></div>
+      <div class="arow"><div class="atime">14:15</div><div class="amsg">Auto-remediated: Vrbo confirmation queue backlog · priority escalation · SLA restored</div></div>
+      <div class="arow"><div class="atime">14:03</div><div class="amsg">Auto-remediated: NYC hotel search index stale · force reindex node-8 · completed 11 min</div></div>
+      <div class="arow"><div class="atime">13:55</div><div class="amsg">Self-healing: Marriott rate limiter detected · inventory buffer reduced 5% · cache serving</div></div>
+      <div class="arow" id="alive" style="display:none"><div class="atime" style="color:var(--green)">now</div><div class="amsg" id="alivemsg" style="color:var(--green)"></div></div>
+    </div>
+  </div>
+</div>
+
+<footer class="page-footer">
+  <div class="pf-left">Built by <span>Megha Bhasker</span> · AI Product Manager · Product case study for Expedia Group Autonomous Operations PM role</div>
+  <div class="pf-links">
+    <a href="https://meghabhasker.me">Portfolio</a>
+    <a href="https://linkedin.com/in/megha-bhasker">LinkedIn</a>
+    <a href="https://github.com/MeghaBhasker">GitHub</a>
+  </div>
+</footer>
+
+<script>
+var cur=-1,resolved=new Set(),inc=3,auto=18;
+var ts=[494,872,225,1338,1865,2652,720,453];
+function fmt(s){var h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60;return h+':'+('0'+m).slice(-2)+':'+('0'+sc).slice(-2);}
+function sel(el,i){
+  if(resolved.has(i))return;
+  document.querySelectorAll('.qrow').forEach(r=>r.classList.remove('sel'));
+  document.querySelectorAll('.detail').forEach(d=>d.classList.remove('open'));
+  if(cur===i){cur=-1;return;}
+  el.classList.add('sel');document.getElementById('d'+i).classList.add('open');cur=i;
+}
+function res(i,msg){
+  resolved.add(i);
+  document.getElementById('r'+i).classList.add('resolved');
+  document.getElementById('r'+i).classList.remove('sel');
+  document.getElementById('d'+i).classList.remove('open');
+  var tk=document.getElementById('tk'+i);tk.textContent=msg;tk.classList.add('show');
+  inc=Math.max(0,inc-1);auto++;
+  document.getElementById('m-inc').textContent=inc;
+  document.getElementById('m-auto').textContent=auto;
+  document.getElementById('alive').style.display='flex';
+  document.getElementById('alivemsg').textContent=msg;
+  cur=-1;
+}
+function showPane(id,tab){
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById(id).classList.add('on');tab.classList.add('on');
+}
+function filt(type,btn){
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+  document.querySelectorAll('.qrow').forEach(r=>{r.style.display=(type==='all'||r.dataset.type===type)?'grid':'none';});
+}
+setInterval(function(){
+  ts=ts.map(s=>s+1);
+  ts.forEach(function(s,i){
+    var el=document.getElementById('t'+i);
+    if(el&&!resolved.has(i)){
+      el.textContent=fmt(s);
+      el.style.color=s<600?'#C0392B':s<1800?'#9A6200':'#888';
+    }
+  });
+},1000);
+</script>
+</body>
+</html>
