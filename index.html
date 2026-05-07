@@ -1,292 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="Megha Bhasker &mdash; AI Product Manager specializing in LLM products, intelligent automation, and AI-integrated platforms."/>
-<meta property="og:title" content="Megha Bhasker &mdash; AI Product Manager"/>
-<meta property="og:description" content="AI PM &middot; LLM Products &middot; Intelligent Automation &middot; 3+ years shipping AI systems that work in production."/>
-<meta property="og:type" content="website"/>
-<title>Megha Bhasker &mdash; AI Product Manager</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="./style.css"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Megha Bhasker - Product Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 min-h-screen">
+    
+    <!-- Header with Photo -->
+    <header class="container mx-auto px-6 py-12 text-center">
+        <div class="flex flex-col items-center gap-6">
+            <!-- Profile Photo - Replace 'profile.jpg' with your cat photo -->
+            <img src="profile.jpg" alt="Megha with cat" class="w-48 h-48 rounded-full object-cover shadow-2xl border-4 border-white float-animation">
+            
+            <div>
+                <h1 class="text-5xl font-bold gradient-text mb-2">Megha Bhasker</h1>
+                <p class="text-xl text-gray-700 mb-4">Product Manager who builds things people actually use 🚀</p>
+                
+                <!-- Fun badges -->
+                <div class="flex gap-3 justify-center flex-wrap text-sm">
+                    <span class="bg-purple-100 text-purple-700 px-4 py-2 rounded-full">📍 Boston, MA</span>
+                    <span class="bg-pink-100 text-pink-700 px-4 py-2 rounded-full">🤖 AI Products</span>
+                    <span class="bg-blue-100 text-blue-700 px-4 py-2 rounded-full">🌍 API Platforms</span>
+                    <span class="bg-green-100 text-green-700 px-4 py-2 rounded-full">💻 Open to Work</span>
+                </div>
+                
+                <!-- Contact -->
+                <div class="flex gap-4 justify-center mt-6">
+                    <a href="mailto:bhasker.me@northeastern.edu" class="bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700 transition">
+                        📧 Email Me
+                    </a>
+                    <a href="https://linkedin.com/in/meghabhask" target="_blank" class="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition">
+                        💼 LinkedIn
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
 
-<!-- NAV -->
-<nav id="navbar">
-  <div class="nav-logo">MB</div>
-  <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
-    <span></span><span></span><span></span>
-  </button>
-  <ul class="nav-links" id="nav-links">
-    <li><span class="bullet">-</span><span><a href="#experience" onclick="closeMenu()">Experience</a></span></li>
-    <li><span class="bullet">-</span><span><a href="#projects" onclick="closeMenu()">Projects</a></span></li>
-    <li><span class="bullet">-</span><span><a href="#skills" onclick="closeMenu()">Skills</a></span></li>
-    <li><span class="bullet">-</span><span><a href="#contact" onclick="closeMenu()">Contact</a></span></li>
-  </ul>
-</nav>
+    <!-- Impact Numbers -->
+    <section class="container mx-auto px-6 py-8">
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Impact in Numbers 📊</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                <div>
+                    <div class="text-3xl font-bold text-purple-600">$3B</div>
+                    <div class="text-sm text-gray-600">TAM Identified</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold text-pink-600">99.9%</div>
+                    <div class="text-sm text-gray-600">API Uptime</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold text-blue-600">45%</div>
+                    <div class="text-sm text-gray-600">Membership Growth</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold text-green-600">300K+</div>
+                    <div class="text-sm text-gray-600">API Calls/Month</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- HERO -->
-<section id="hero">
-  <div class="hero-bg-circle c1"></div>
-  <div class="hero-bg-circle c2"></div>
-  <div class="hero-bg-circle c3"></div>
-  <div class="hero-content">
-    <div class="hero-tag">AI Product Manager &middot; Open to opportunities</div>
-    <h1 class="hero-name">Megha<br/><em>Bhasker</em></h1>
-    <p class="hero-sub">I build AI-integrated products &mdash; from multi-model routing engines and LLM-powered developer tools to automated decision pipelines &mdash; and ship things that work in production.</p>
-    <div class="hero-ctas">
-      <a href="#contact" class="btn-primary">Let's talk ↗</a>
-      <a href="#experience" class="btn-secondary">See my work</a>
-    </div>
-    <div class="hero-stats">
-      <div class="stat">
-        <div class="stat-num">3+</div>
-        <div class="stat-label">Years AI PM experience</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num">5</div>
-        <div class="stat-label">AI models integrated</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num">300K</div>
-        <div class="stat-label">Monthly API calls owned</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num">3</div>
-        <div class="stat-label">LLM products shipped</div>
-      </div>
-    </div>
-  </div>
-</section>
+    <!-- Work Experience -->
+    <section class="container mx-auto px-6 py-8">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">What I've Built 🛠️</h2>
+        
+        <div class="space-y-6">
+            <!-- EarthDefine -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-2xl transition">
+                <div class="flex items-start gap-4">
+                    <div class="text-4xl">🌍</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-800">Buildings API Platform</h3>
+                        <p class="text-purple-600 font-semibold">EarthDefine • Now</p>
+                        <p class="text-gray-700 mt-2">Managing geospatial API serving building data across the US. Built interactive API playground that cut support tickets by 25% and onboarding time by 35%.</p>
+                        <div class="flex gap-2 mt-3 flex-wrap">
+                            <span class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full">API Product</span>
+                            <span class="text-xs bg-pink-100 text-pink-700 px-3 py-1 rounded-full">Developer Tools</span>
+                            <span class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full">MapTiler SDK</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-<!-- EXPERIENCE -->
-<section id="experience">
-  <div class="section-label">Where I've worked</div>
-  <h2 class="section-title">AI products that<br/><em>actually shipped</em></h2>
-  <div class="exp-grid">
+            <!-- Venba Tech -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-2xl transition">
+                <div class="flex items-start gap-4">
+                    <div class="text-4xl">📊</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-800">PowerBI Dashboards</h3>
+                        <p class="text-purple-600 font-semibold">Venba Tech • 2022</p>
+                        <p class="text-gray-700 mt-2">Built 3 enterprise dashboards for Reliance, Cafe Coffee Day, and Raintree Hotels. Improved decision-making by 40%, managed team of 3 interns.</p>
+                        <div class="flex gap-2 mt-3 flex-wrap">
+                            <span class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full">PowerBI</span>
+                            <span class="text-xs bg-pink-100 text-pink-700 px-3 py-1 rounded-full">Data Analytics</span>
+                            <span class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full">Team Leadership</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="exp-item reveal">
-      <div class="exp-left">
-        <div class="exp-date">Jun 2024 &ndash; Present</div>
-        <div class="exp-company">EarthDefine LLC</div>
-        <span class="exp-tag tag-platform">AI Platform PM</span>
-      </div>
-      <div class="exp-right">
-        <div class="exp-role">Product Manager &mdash; AI Platform &amp; Automated Workflows</div>
-        <ul class="exp-bullets">
-          <li><span class="bullet">-</span><span>Designed a <strong>production multi-model AI routing engine</strong> integrating 5 geocoding providers &mdash; real-time confidence scoring, 8 fallback strategies, boosted match success 18%, cut latency 20&ndash;35%</span></li>
-          <li><span class="bullet">-</span><span>Defined <strong>responsible AI guardrails</strong> &mdash; failure modes, confidence floor thresholds, override policies; authored functional specs used as single source of truth across engineering, QA, and legal</span></li>
-          <li><span class="bullet">-</span><span>Led <strong>root cause investigation of AI model failure</strong> (high-confidence wrong geocodes) &mdash; identified two-layer failure, produced management report and engineering fix recommendations</span></li>
-          <li><span class="bullet">-</span><span>Built <strong>AI product telemetry from scratch</strong> &mdash; token-scoped dashboards tracking 300K+ monthly API calls, model fallback rates, cost-per-resolution; cut support investigation time 40%</span></li>
-          <li><span class="bullet">-</span><span>Designed and owned <strong>automated regression testing framework</strong> &mdash; 150 Google-verified addresses across 50 states, PROD vs UAT comparison scripts for AI model validation</span></li>
-          <li><span class="bullet">-</span><span>Automated <strong>ML-assisted data ingestion pipeline</strong> across 3M+ records &mdash; days to hours, 60% less QA rework</span></li>
-        </ul>
-      </div>
-    </div>
+            <!-- ProActiveSense -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-2xl transition">
+                <div class="flex items-start gap-4">
+                    <div class="text-4xl">🏃</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-800">ProActiveSense - Fitness Wearable</h3>
+                        <p class="text-purple-600 font-semibold">Northeastern University • 2023</p>
+                        <p class="text-gray-700 mt-2">Led product strategy for ML-powered fitness wearable. Researched with 80+ users, identified $3B TAM, projected $120M Year 1 revenue.</p>
+                        <div class="flex gap-2 mt-3 flex-wrap">
+                            <span class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full">Product Strategy</span>
+                            <span class="text-xs bg-pink-100 text-pink-700 px-3 py-1 rounded-full">Market Research</span>
+                            <span class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full">DFMEA</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="exp-item reveal">
-      <div class="exp-left">
-        <div class="exp-date">May &ndash; Aug 2022</div>
-        <div class="exp-company">Venba Tech</div>
-        <span class="exp-tag tag-iot">IoT &middot; Startup</span>
-      </div>
-      <div class="exp-right">
-        <div class="exp-role">Product Manager Intern</div>
-        <ul class="exp-bullets">
-          <li><span class="bullet">-</span><span>Led <strong>AI-assisted IoT platform deployments</strong> for 3 enterprise clients &mdash; Reliance, CCD, Raintree Hotels</span></li>
-          <li><span class="bullet">-</span><span>Designed <strong>automated Power BI dashboards</strong> ingesting real-time IoT sensor streams into AI-ready platform health views for 20+ stakeholders</span></li>
-          <li><span class="bullet">-</span><span>Owned go-to-market execution for a subsidiary IoT platform across three channels</span></li>
-        </ul>
-      </div>
-    </div>
+            <!-- IoT Project -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-2xl transition">
+                <div class="flex items-start gap-4">
+                    <div class="text-4xl">🔧</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-800">IoT Sensor System</h3>
+                        <p class="text-purple-600 font-semibold">Customer Analytics LLC • 2021-2022</p>
+                        <p class="text-gray-700 mt-2">Built Arduino-based monitoring system improving CNC coolant efficiency by 30%. Developed 6 prototypes with real-time alerts.</p>
+                        <div class="flex gap-2 mt-3 flex-wrap">
+                            <span class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full">IoT</span>
+                            <span class="text-xs bg-pink-100 text-pink-700 px-3 py-1 rounded-full">Arduino</span>
+                            <span class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full">User Research</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <div class="exp-item reveal">
-      <div class="exp-left">
-        <div class="exp-date">Dec 2021 &ndash; Apr 2022</div>
-        <div class="exp-company">Customer Analytics LLC</div>
-        <span class="exp-tag tag-iot">IoT Research</span>
-      </div>
-      <div class="exp-right">
-        <div class="exp-role">IoT Research Intern</div>
-        <ul class="exp-bullets">
-          <li><span class="bullet">-</span><span>Engineered an <strong>automated IoT sensor pipeline</strong> measuring 4 CNC coolant parameters in real time</span></li>
-          <li><span class="bullet">-</span><span>Built end-to-end data flow from sensor ingestion to <strong>AI-assisted anomaly detection</strong> and push alerting &mdash; replacing manual monitoring with an automated decision system</span></li>
-        </ul>
-      </div>
-    </div>
+    <!-- Skills -->
+    <section class="container mx-auto px-6 py-8">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">Skills & Tools 🧰</h2>
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+            <div class="grid md:grid-cols-3 gap-6">
+                <div>
+                    <h3 class="font-bold text-purple-600 mb-3">Product Management</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs bg-gray-100 px-3 py-1 rounded-full">Strategy</span>
+                        <span class="text-xs bg-gray-100 px-3 py-1 rounded-full">Roadmapping</span>
+                        <span class="text-xs bg-gray-100 px-3 py-1 rounded-full">User Research</span>
+                        <span class="text-xs bg-gray-100 px-3 py-1 rounded-full">PRDs</span>
+                        <span class="text-xs bg-gray-100 px-3 py-1 rounded-full">DFMEA</span>
+                        <span class="text-xs bg-gray-100 px-3 py-1 rounded-full">Go-to-Market</span>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-pink-600 mb-3">Technical</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs bg-gray-100 px-3 py-1 rounded-full">APIs</span>
+                        <span class="text-xs bg-gray-100 px-3 py-1 rounded-full">PowerBI</span>
+                        <span class="text-xs bg-gray-100 px-3 py-1 rounded-full">Python</span>
+                        <span class="text-xs bg-gray-100 px-3 py-1 rounded-full">SQL</span>
+                        <span class="text-xs bg-gray-100 px-3 py-1 rounded-full">HTML/JS</span>
+                        <span class="text-xs bg-gray-100 px-3 py-1 rounded-full">MapTiler</span>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-blue-600 mb-3">AI & ML</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs bg-gray-100 px-3 py-1 rounded-full">AI Strategy</span>
+                        <span class="text-xs bg-gray-100 px-3 py-1 rounded-full">LLMs</span>
+                        <span class="text-xs bg-gray-100 px-3 py-1 rounded-full">NLP</span>
+                        <span class="text-xs bg-gray-100 px-3 py-1 rounded-full">Gen AI</span>
+                        <span class="text-xs bg-gray-100 px-3 py-1 rounded-full">ML Products</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <div class="exp-item reveal">
-      <div class="exp-left">
-        <div class="exp-date">Sep &ndash; Nov 2021</div>
-        <div class="exp-company">Maveric Systems</div>
-        <span class="exp-tag tag-pm">Engineering</span>
-      </div>
-      <div class="exp-right">
-        <div class="exp-role">Software Developer Intern</div>
-        <ul class="exp-bullets">
-          <li><span class="bullet">-</span><span>Built backend modules for <strong>AI-assisted QA automation tooling</strong> (Flutter, Spring Boot)</span></li>
-          <li><span class="bullet">-</span><span>Shipped across 3 Agile sprints with structured demos to engineering leads and product stakeholders</span></li>
-        </ul>
-      </div>
-    </div>
+    <!-- Education -->
+    <section class="container mx-auto px-6 py-8">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">Education 🎓</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h3 class="text-lg font-bold text-gray-800">MS in Engineering Management</h3>
+                <p class="text-purple-600">Northeastern University • 2022-2024</p>
+                <p class="text-sm text-gray-600 mt-2">VP of APMC Club • Organized 200+ attendee Product Conference</p>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h3 class="text-lg font-bold text-gray-800">BTech in Electronics & Comm</h3>
+                <p class="text-purple-600">VIT Chennai • 2018-2022</p>
+                <p class="text-sm text-gray-600 mt-2">Marketing Head • Secured ₹375K sponsorships</p>
+            </div>
+        </div>
+    </section>
 
-  </div>
-</section>
+    <!-- Fun Facts -->
+    <section class="container mx-auto px-6 py-8 mb-12">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">Beyond Work 🌟</h2>
+        <div class="grid md:grid-cols-4 gap-4">
+            <div class="bg-white rounded-2xl shadow-lg p-6 text-center hover:shadow-xl transition">
+                <div class="text-4xl mb-2">💃</div>
+                <p class="font-semibold text-gray-800">Bharatanatyam</p>
+                <p class="text-xs text-gray-600">18+ years</p>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg p-6 text-center hover:shadow-xl transition">
+                <div class="text-4xl mb-2">♟️</div>
+                <p class="font-semibold text-gray-800">Chess Player</p>
+                <p class="text-xs text-gray-600">Strategic thinker</p>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg p-6 text-center hover:shadow-xl transition">
+                <div class="text-4xl mb-2">📚</div>
+                <p class="font-semibold text-gray-800">Published</p>
+                <p class="text-xs text-gray-600">2 IoT papers</p>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg p-6 text-center hover:shadow-xl transition">
+                <div class="text-4xl mb-2">🐱</div>
+                <p class="font-semibold text-gray-800">Cat Parent</p>
+                <p class="text-xs text-gray-600">Obviously 😊</p>
+            </div>
+        </div>
+    </section>
 
-<!-- PROJECTS -->
-<section id="projects">
-  <div class="section-label">Things I've built</div>
-  <h2 class="section-title">AI products &amp; <em>side bets</em></h2>
-  <div class="projects-grid">
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-xl font-semibold mb-4">Let's build something awesome together! 🚀</p>
+            <div class="flex gap-4 justify-center flex-wrap">
+                <a href="mailto:bhasker.me@northeastern.edu" class="hover:underline">bhasker.me@northeastern.edu</a>
+                <span>•</span>
+                <a href="https://linkedin.com/in/meghabhask" target="_blank" class="hover:underline">LinkedIn</a>
+                <span>•</span>
+                <a href="tel:857-225-9359" class="hover:underline">857-225-9359</a>
+            </div>
+        </div>
+    </footer>
 
-    <div class="project-card reveal">
-      <div class="project-num">01</div>
-      <div class="project-meta">React &middot; Claude API &middot; Vercel &middot; 2026</div>
-      <div class="project-title">BestMove</div>
-      <div class="project-desc">AI-powered chess training platform integrating the Claude API for real-time LLM move analysis and natural language coaching. Adaptive onboarding, puzzle session engine, AI-driven accuracy scoring, and mistake review workflow &mdash; with responsible AI design (explainability + guardrails) baked in.</div>
-      <div class="project-tags">
-        <span class="ptag">Claude API</span><span class="ptag">LLM</span><span class="ptag">React</span><span class="ptag">Responsible AI</span>
-      </div>
-    </div>
-
-    <div class="project-card reveal">
-      <div class="project-num">02</div>
-      <div class="project-meta">Next.js 14 &middot; Claude API &middot; Vercel &middot; 2026</div>
-      <div class="project-title">PM/Spec</div>
-      <div class="project-desc">LLM-powered functional spec generator &mdash; describe a feature in plain language, get an engineering-ready spec in seconds. Covers problem statement, user stories, Given/When/Then acceptance criteria, edge cases, QA scenarios, and success metrics. Server-side Anthropic proxy keeps API keys secure.</div>
-      <div class="project-tags">
-        <span class="ptag">Next.js 14</span><span class="ptag">Claude API</span><span class="ptag">LLM tooling</span><span class="ptag">Vercel</span>
-      </div>
-    </div>
-
-    <div class="project-card reveal">
-      <div class="project-num">03</div>
-      <div class="project-meta">Boston Scientific Mentorship &middot; 2023</div>
-      <div class="project-title">ProActiveSense</div>
-      <div class="project-desc">AI fitness wearable &mdash; IMU-based automated movement classification platform. Full product lifecycle: user research, market validation, stakeholder analysis, and DFMEA AI safety risk assessment under Boston Scientific mentorship.</div>
-      <div class="project-tags">
-        <span class="ptag">AI Hardware</span><span class="ptag">User research</span><span class="ptag">DFMEA</span><span class="ptag">Healthcare</span>
-      </div>
-    </div>
-
-    <div class="project-card reveal">
-      <div class="project-num">04</div>
-      <div class="project-meta">Wayfair Sr. PM Mentorship &middot; 2024</div>
-      <div class="project-title">Threads Roadmap</div>
-      <div class="project-desc">Defined AI-assisted content discovery features, 3-phase strategic roadmap, MVP scope, and north star engagement metrics for a conceptual social platform. Stress-tested AI recommendation strategy with a senior Wayfair PM.</div>
-      <div class="project-tags">
-        <span class="ptag">AI Strategy</span><span class="ptag">Roadmap</span><span class="ptag">OKRs</span>
-      </div>
-    </div>
-
-    <div class="project-card reveal">
-      <div class="project-num">05</div>
-      <div class="project-meta">MATLAB &middot; DSP &middot; 2020&ndash;21</div>
-      <div class="project-title">Mask Detection System</div>
-      <div class="project-desc">Real-time AI compliance detection using MATLAB and DSP-based image processing with binary thresholding and pixel intensity analysis. Continuous automated monitoring pipeline &mdash; published research output.</div>
-      <div class="project-tags">
-        <span class="ptag">AI/ML</span><span class="ptag">MATLAB</span><span class="ptag">Image processing</span><span class="ptag">Published</span>
-      </div>
-    </div>
-
-    <div class="project-card reveal">
-      <div class="project-num">06</div>
-      <div class="project-meta">IEEE Xplore &middot; IJCRT &middot; 2021</div>
-      <div class="project-title">Published Research</div>
-      <div class="project-desc">Two published papers &mdash; IoT-based AI home automation with voice control and centralized orchestration (IEEE Xplore) and a smart security system with real-time AI anomaly detection (IJCRT).</div>
-      <div class="project-tags">
-        <span class="ptag">IoT AI</span><span class="ptag">IEEE</span><span class="ptag">Research</span><span class="ptag">Published</span>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- SKILLS -->
-<section id="skills">
-  <div class="section-label">What I bring</div>
-  <h2 class="section-title">AI skills &amp; <em>tools</em></h2>
-  <div class="skills-grid">
-    <div class="skill-card reveal">
-      <div class="skill-icon clay">🤖</div>
-      <div class="skill-cat">AI Product</div>
-      <div class="skill-list">LLM integration (Claude API) &middot; Multi-model routing &amp; scoring &middot; Responsible AI &amp; guardrails &middot; Telemetry &amp; evaluation design &middot; Prompt engineering &middot; AI product roadmapping &middot; Functional spec writing</div>
-    </div>
-    <div class="skill-card reveal">
-      <div class="skill-icon sage">⚙️</div>
-      <div class="skill-cat">Technical</div>
-      <div class="skill-list">Next.js &middot; NestJS &middot; REST APIs &middot; Docker &middot; GitHub Actions CI/CD &middot; Terraform IaC &middot; Kubernetes &middot; Redis &middot; PostgreSQL &middot; Python &middot; QGIS</div>
-    </div>
-    <div class="skill-card reveal">
-      <div class="skill-icon gold">📊</div>
-      <div class="skill-cat">AI Analytics</div>
-      <div class="skill-list">AI model telemetry &middot; Fallback performance analysis &middot; Pipeline KPIs &middot; NLP &amp; sentiment analysis &middot; Power BI &middot; SQL &middot; R</div>
-    </div>
-    <div class="skill-card reveal">
-      <div class="skill-icon clay">🗺️</div>
-      <div class="skill-cat">Product Management</div>
-      <div class="skill-list">AI roadmapping &middot; OKRs &middot; User story mapping &middot; Outcome-based prioritization &middot; Agile/Scrum &middot; Stakeholder alignment &middot; Go-to-market</div>
-    </div>
-    <div class="skill-card reveal">
-      <div class="skill-icon sage">🔬</div>
-      <div class="skill-cat">AI Testing &amp; Validation</div>
-      <div class="skill-list">Regression testing frameworks &middot; PROD vs UAT benchmarking &middot; Model evaluation metrics &middot; Edge case documentation &middot; QA acceptance criteria &middot; DFMEA</div>
-    </div>
-    <div class="skill-card reveal">
-      <div class="skill-icon gold">🌐</div>
-      <div class="skill-cat">Domains</div>
-      <div class="skill-list">LLM products &middot; AI-integrated platforms &middot; Geospatial AI &middot; Developer tools &middot; IoT &amp; sensor systems &middot; Enterprise SaaS &middot; Automated decision pipelines</div>
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section id="contact">
-  <div class="section-label contact-label">Get in touch</div>
-  <div class="contact-inner">
-    <div class="contact-left">
-      <h2 class="contact-title">Let's build<br/><em>something great</em></h2>
-      <p class="contact-sub">I'm open to AI PM roles in LLM products, intelligent automation, developer tools, or AI-integrated platforms. Based in Michigan, open to remote.</p>
-      <div class="contact-links">
-        <a href="mailto:cloudy020501@gmail.com" class="contact-link">
-          <div class="contact-link-icon">✉</div>
-          <div>
-            <div class="contact-link-label">Email</div>
-            <div class="contact-link-text">cloudy020501@gmail.com</div>
-          </div>
-        </a>
-        <a href="https://linkedin.com/in/megha-bhasker" target="_blank" rel="noopener" class="contact-link">
-          <div class="contact-link-icon">in</div>
-          <div>
-            <div class="contact-link-label">LinkedIn</div>
-            <div class="contact-link-text">linkedin.com/in/megha-bhasker</div>
-          </div>
-        </a>
-        <a href="tel:8572259359" class="contact-link">
-          <div class="contact-link-icon">☎</div>
-          <div>
-            <div class="contact-link-label">Phone</div>
-            <div class="contact-link-text">857-225-9359</div>
-          </div>
-        </a>
-      </div>
-    </div>
-    <div class="resume-card">
-      <div class="resume-title">Resume</div>
-      <div class="resume-sub">Download my latest resume &mdash; tailored for AI PM roles.</div>
-      <a href="https://drive.google.com/uc?export=download&id=1LPNre_pX_yUc5j7Z97qfimZaA-2z0bHh" target="_blank" class="resume-btn">⬇ Download Resume</a>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">Megha Bhasker</div>
-  <div class="footer-copy">© 2026 &middot; Built with care</div>
-</footer>
-
-<script src="./main.js"></script>
 </body>
 </html>
