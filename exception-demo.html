@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI Exception Management — Global Clearing Demo · Megha Bhasker</title>
+<meta name="description" content="Interactive product demo: AI-powered exception management platform for JPMorgan Global Clearing operations. Built by Megha Bhasker, AI Product Manager."/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D0F14;
+  --surface:#13161D;
+  --surface2:#181C25;
+  --border:#232737;
+  --border2:#2E3347;
+  --text:#E8E6DE;
+  --text2:#8A8880;
+  --text3:#525050;
+  --blue:#378ADD;
+  --blue-bg:#0E1E32;
+  --blue-border:#1A3A5C;
+  --green:#639922;
+  --green-bg:#0E1A08;
+  --green-border:#1E3A10;
+  --amber:#BA7517;
+  --amber-bg:#1E1408;
+  --amber-border:#3A2810;
+  --red:#E24B4A;
+  --red-bg:#1E0C0C;
+  --red-border:#3A1414;
+  --purple:#7F77DD;
+  --purple-bg:#110F1E;
+  --font-sans:'DM Sans', sans-serif;
+  --font-mono:'DM Mono', monospace;
+  --font-serif:'Fraunces', serif;
+}
+html{font-size:14px;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:var(--font-sans);min-height:100vh}
+
+/* PAGE HEADER */
+.page-header{border-bottom:0.5px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.page-logo{display:flex;align-items:center;gap:10px}
+.logo-mark{width:28px;height:28px;border:0.5px solid var(--border2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-size:14px;color:var(--text2)}
+.logo-name{font-size:13px;font-weight:500;color:var(--text)}
+.logo-sub{font-size:12px;color:var(--text3);margin-top:1px}
+.page-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:500;border:0.5px solid}
+.pill-blue{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-border)}
+.pill-green{background:var(--green-bg);color:#97C459;border-color:var(--green-border)}
+.pill-amber{background:var(--amber-bg);color:#EF9F27;border-color:var(--amber-border)}
+.pill-grey{background:var(--surface2);color:var(--text2);border-color:var(--border2)}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#97C459;animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* HERO STRIP */
+.hero{padding:2rem 2rem 1.5rem;border-bottom:0.5px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:end}
+.hero-eyebrow{font-size:11px;font-weight:500;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.hero-title{font-family:var(--font-serif);font-size:28px;font-weight:300;color:var(--text);line-height:1.2;margin-bottom:8px}
+.hero-title em{font-style:italic;color:var(--blue)}
+.hero-desc{font-size:13px;color:var(--text2);line-height:1.65;max-width:560px}
+.hero-meta{text-align:right}
+.hm-label{font-size:11px;color:var(--text3);margin-bottom:6px}
+.hm-stack{display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:0.5px solid var(--border)}
+.met{padding:1rem 1.5rem;border-right:0.5px solid var(--border)}
+.met:last-child{border-right:none}
+.met-val{font-size:24px;font-weight:500;color:var(--text);font-variant-numeric:tabular-nums;transition:all .3s}
+.met-lbl{font-size:11px;color:var(--text3);margin-top:2px;letter-spacing:.03em}
+.met-delta{font-size:11px;margin-top:4px}
+.up{color:#97C459}.dn{color:var(--red)}.neu{color:var(--text3)}
+
+/* TABS */
+.tabs{display:flex;border-bottom:0.5px solid var(--border);padding:0 2rem}
+.tab{padding:10px 16px;font-size:12px;cursor:pointer;color:var(--text3);border-bottom:1.5px solid transparent;margin-bottom:-0.5px;transition:all .15s;font-weight:500}
+.tab:hover{color:var(--text2)}
+.tab.on{color:var(--text);border-bottom-color:var(--blue)}
+.pane{display:none;padding:1.5rem 2rem}
+.pane.on{display:block}
+
+/* TOOLBAR */
+.toolbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.fbtn{padding:4px 12px;border-radius:20px;border:0.5px solid var(--border2);font-size:11px;cursor:pointer;background:transparent;color:var(--text3);transition:all .15s;font-family:var(--font-sans)}
+.fbtn:hover{color:var(--text2);border-color:var(--border2)}
+.fbtn.on{background:var(--text);color:var(--bg);border-color:var(--text)}
+.search-w{flex:1;min-width:160px;max-width:300px}
+.search-w input{width:100%;padding:5px 12px;font-size:12px;border-radius:6px;border:0.5px solid var(--border2);background:var(--surface2);color:var(--text);font-family:var(--font-sans);outline:none}
+.search-w input:focus{border-color:var(--blue)}
+.search-w input::placeholder{color:var(--text3)}
+
+/* QUEUE */
+.queue{border:0.5px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:14px}
+.qhdr{display:grid;grid-template-columns:22px 1fr 72px 60px 80px 90px;gap:8px;padding:8px 14px;background:var(--surface);font-size:10px;font-weight:500;color:var(--text3);letter-spacing:.06em;text-transform:uppercase}
+.qrow{display:grid;grid-template-columns:22px 1fr 72px 60px 80px 90px;gap:8px;padding:9px 14px;border-top:0.5px solid var(--border);align-items:center;cursor:pointer;transition:background .1s}
+.qrow:hover{background:var(--surface2)}
+.qrow.sel{background:var(--blue-bg)}
+.qrow.resolved{opacity:.25;pointer-events:none}
+.pri{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;flex-shrink:0;font-family:var(--font-mono)}
+.p1{background:var(--red-bg);color:var(--red);border:0.5px solid var(--red-border)}
+.p2{background:var(--amber-bg);color:#EF9F27;border:0.5px solid var(--amber-border)}
+.p3{background:var(--green-bg);color:#97C459;border:0.5px solid var(--green-border)}
+.exc-type{font-size:12px;font-weight:500;color:var(--text)}
+.exc-sub{font-size:11px;color:var(--text3);margin-top:1px}
+.amt{font-size:12px;font-weight:500;color:var(--text);text-align:right;font-family:var(--font-mono)}
+.timer{font-size:11px;text-align:right;font-family:var(--font-mono)}
+.tag{display:inline-block;font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;border:0.5px solid;white-space:nowrap}
+.t-red{background:var(--red-bg);color:var(--red);border-color:var(--red-border)}
+.t-amb{background:var(--amber-bg);color:#EF9F27;border-color:var(--amber-border)}
+.t-grn{background:var(--green-bg);color:#97C459;border-color:var(--green-border)}
+.t-blu{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-border)}
+.t-pur{background:var(--purple-bg);color:var(--purple);border-color:#2A2850}
+.t-gry{background:var(--surface2);color:var(--text3);border-color:var(--border2)}
+.cbar-w{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:3px}
+.cbar{height:100%;border-radius:2px;transition:width .5s}
+.conf-lbl{font-size:11px;color:var(--text3)}
+
+/* DETAIL */
+.detail{border:0.5px solid var(--border2);border-radius:8px;padding:1.25rem;margin-bottom:14px;background:var(--surface);display:none}
+.detail.open{display:block}
+.dh{display:flex;align-items:start;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.dt{font-size:14px;font-weight:500;color:var(--text)}
+.duetr{font-size:10px;color:var(--text3);margin-top:3px;font-family:var(--font-mono);letter-spacing:.04em}
+.ai-box{background:var(--blue-bg);border-radius:6px;padding:10px 14px;margin:10px 0;border:0.5px solid var(--blue-border)}
+.ai-lbl{font-size:10px;font-weight:500;color:var(--blue);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.ai-text{font-size:12px;color:#7BB3E0;line-height:1.6}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.field{background:var(--surface2);border-radius:6px;padding:8px 12px;border:0.5px solid var(--border)}
+.fl{font-size:10px;color:var(--text3);margin-bottom:3px;letter-spacing:.04em;text-transform:uppercase}
+.fv{font-size:12px;font-weight:500;color:var(--text)}
+.actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.btn-a{padding:7px 16px;border-radius:6px;border:0.5px solid var(--green-border);background:var(--green-bg);color:#97C459;font-size:12px;font-weight:500;cursor:pointer;font-family:var(--font-sans);transition:opacity .15s}
+.btn-r{padding:7px 16px;border-radius:6px;border:0.5px solid var(--red-border);background:var(--red-bg);color:var(--red);font-size:12px;font-weight:500;cursor:pointer;font-family:var(--font-sans)}
+.btn-e{padding:7px 16px;border-radius:6px;border:0.5px solid var(--border2);background:transparent;color:var(--text3);font-size:12px;cursor:pointer;font-family:var(--font-sans)}
+.toast{font-size:12px;color:#97C459;background:var(--green-bg);border-radius:6px;padding:8px 12px;margin-top:10px;display:none;border:0.5px solid var(--green-border);font-family:var(--font-mono)}
+.toast.show{display:block}
+
+/* NOSTRO */
+.nostro-t{display:grid;grid-template-columns:90px 1fr 70px 60px;gap:12px;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:12px}
+.nostro-t:last-child{border-bottom:none}
+.nb-w{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.nb-f{height:100%;border-radius:3px}
+
+/* AUDIT */
+.arow{display:flex;gap:10px;align-items:start;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:12px}
+.arow:last-child{border-bottom:none}
+.atime{color:var(--text3);font-family:var(--font-mono);min-width:44px;flex-shrink:0;font-size:11px;padding-top:1px}
+.amsg{color:var(--text2);line-height:1.4}
+
+/* TRENDS */
+.trow{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:0.5px solid var(--border);font-size:12px}
+.trow:last-child{border-bottom:none}
+.tbw{flex:1;height:4px;background:var(--border);border-radius:3px;overflow:hidden}
+.tbf{height:100%;border-radius:3px;background:var(--blue)}
+.sh{font-size:10px;font-weight:500;letter-spacing:.07em;color:var(--text3);text-transform:uppercase;margin:0 0 10px}
+
+/* PAGE FOOTER */
+.page-footer{border-top:0.5px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.pf-left{font-size:12px;color:var(--text3)}
+.pf-left span{color:var(--text2)}
+.pf-links{display:flex;gap:16px}
+.pf-links a{font-size:12px;color:var(--text3);text-decoration:none}
+.pf-links a:hover{color:var(--text2)}
+
+@media(max-width:640px){
+  .metrics{grid-template-columns:1fr 1fr}
+  .met{border-right:none;border-bottom:0.5px solid var(--border)}
+  .hero{grid-template-columns:1fr}
+  .hero-meta{text-align:left}
+  .hm-stack{align-items:flex-start}
+  .qhdr,.qrow{grid-template-columns:20px 1fr 60px 50px}
+  .qhdr>*:nth-child(5),.qhdr>*:nth-child(6),.qrow>*:nth-child(5),.qrow>*:nth-child(6){display:none}
+  .pane{padding:1rem}
+  .page-header,.hero,.tabs{padding-left:1rem;padding-right:1rem}
+}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="page-logo">
+    <div class="logo-mark">MB</div>
+    <div>
+      <div class="logo-name">Megha Bhasker</div>
+      <div class="logo-sub">AI Product Manager · meghabhasker.me</div>
+    </div>
+  </div>
+  <div class="page-meta">
+    <span class="pill pill-blue">Product case study</span>
+    <span class="pill pill-green"><span class="live-dot"></span> Live demo</span>
+    <span class="pill pill-grey">JPMorgan Global Clearing</span>
+  </div>
+</header>
+
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow">AI exception management · North America USD · CHIPS + Fedwire</div>
+    <h1 class="hero-title">Global clearing<br/><em>exception management</em></h1>
+    <p class="hero-desc">An interactive demo of an AI-powered operations platform that reduces manual exception handling from 5% to &lt;1% of payments — using intelligent triage, automated resolution, and predictive cut-off management. Built as a product case study for JPMorgan's Global Clearing team.</p>
+  </div>
+  <div class="hero-meta">
+    <div class="hm-label">Built by</div>
+    <div class="hm-stack">
+      <span class="tag t-blu">AI Product Manager</span>
+      <span class="tag t-gry">3+ yrs shipping AI systems</span>
+      <span class="tag t-gry">View case study PDF →</span>
+    </div>
+  </div>
+</section>
+
+<div class="metrics">
+  <div class="met"><div class="met-val" id="m-open">8</div><div class="met-lbl">Open exceptions</div><div class="met-delta dn">+3 last hour</div></div>
+  <div class="met"><div class="met-val">97.2%</div><div class="met-lbl">STP rate today</div><div class="met-delta up">+0.4% vs yesterday</div></div>
+  <div class="met"><div class="met-val" id="m-res">2.1h</div><div class="met-lbl">Avg resolution time</div><div class="met-delta up">-1.8h vs baseline</div></div>
+  <div class="met"><div class="met-val" id="m-auto">14</div><div class="met-lbl">Auto-resolved today</div><div class="met-delta up">84% avg AI confidence</div></div>
+</div>
+
+<div class="tabs">
+  <div class="tab on" onclick="showPane('qp',this)">Exception queue</div>
+  <div class="tab" onclick="showPane('np',this)">Nostro monitor</div>
+  <div class="tab" onclick="showPane('ap',this)">Audit trail</div>
+  <div class="tab" onclick="showPane('tp',this)">Trends</div>
+</div>
+
+<div id="qp" class="pane on">
+  <div class="toolbar">
+    <button class="fbtn on" onclick="filt('all',this)">All (8)</button>
+    <button class="fbtn" onclick="filt('sanctions',this)">Sanctions</button>
+    <button class="fbtn" onclick="filt('repair',this)">Field repair</button>
+    <button class="fbtn" onclick="filt('nostro',this)">Nostro</button>
+    <button class="fbtn" onclick="filt('return',this)">Returns</button>
+    <div class="search-w"><input type="text" placeholder="Search UETR, counterparty, amount..." oninput="srch(this.value)"/></div>
+    <span class="pill pill-amber" style="margin-left:auto"><span id="ctag">Fedwire 4:12:00</span></span>
+  </div>
+
+  <div class="queue">
+    <div class="qhdr"><div></div><div>Exception</div><div style="text-align:right">Amount</div><div style="text-align:right">Cut-off</div><div>AI confidence</div><div>Action</div></div>
+    <div class="qrow" onclick="sel(this,0)" id="r0" data-type="sanctions" data-s="sanctions hsbc india mehta trading 4200000 8f3a2b1c">
+      <div class="pri p1">1</div><div><div class="exc-type">Sanctions hold</div><div class="exc-sub">HSBC India · MT103 field 50K</div></div><div class="amt">$4,200,000</div><div class="timer" style="color:var(--red)" id="t0">1:14:00</div><div><div class="conf-lbl">62% — manual</div><div class="cbar-w"><div class="cbar" style="width:62%;background:var(--amber)"></div></div></div><div><span class="tag t-amb">Review</span></div>
+    </div>
+    <div class="qrow" onclick="sel(this,1)" id="r1" data-type="repair" data-s="swift repair dbs singapore invalid bic 870000 2c3d4e5f">
+      <div class="pri p1">2</div><div><div class="exc-type">SWIFT field repair</div><div class="exc-sub">DBS Singapore · Invalid BIC</div></div><div class="amt">$870,000</div><div class="timer" style="color:var(--red)" id="t1">1:42:00</div><div><div class="conf-lbl">94% — auto-fix</div><div class="cbar-w"><div class="cbar" style="width:94%;background:var(--green)"></div></div></div><div><span class="tag t-grn">Auto-resolve</span></div>
+    </div>
+    <div class="qrow" onclick="sel(this,2)" id="r2" data-type="nostro" data-s="nostro break jpmorgan frankfurt 250000 break-0041">
+      <div class="pri p2">3</div><div><div class="exc-type">Nostro break</div><div class="exc-sub">JPM Frankfurt · USD debit unmatched</div></div><div class="amt">$250,000</div><div class="timer" id="t2">3:05:00</div><div><div class="conf-lbl">88% — match found</div><div class="cbar-w"><div class="cbar" style="width:88%;background:var(--green)"></div></div></div><div><span class="tag t-grn">Auto-resolve</span></div>
+    </div>
+    <div class="qrow" onclick="sel(this,3)" id="r3" data-type="return" data-s="return commerzbank ac002 closed 125000 5e6f7a8b">
+      <div class="pri p2">4</div><div><div class="exc-type">Return — AC02</div><div class="exc-sub">Commerzbank · Account closed</div></div><div class="amt">$125,000</div><div class="timer" id="t3">3:30:00</div><div><div class="conf-lbl">91% — notify</div><div class="cbar-w"><div class="cbar" style="width:91%;background:var(--green)"></div></div></div><div><span class="tag t-blu">Notify</span></div>
+    </div>
+    <div class="qrow" onclick="sel(this,4)" id="r4" data-type="sanctions" data-s="aml structuring standard chartered 3300000 7b8c9d0e">
+      <div class="pri p2">5</div><div><div class="exc-type">AML monitoring hold</div><div class="exc-sub">StanChart · Structuring pattern</div></div><div class="amt">$3,300,000</div><div class="timer" id="t4">3:55:00</div><div><div class="conf-lbl">45% — escalate</div><div class="cbar-w"><div class="cbar" style="width:45%;background:var(--red)"></div></div></div><div><span class="tag t-red">Escalate</span></div>
+    </div>
+    <div class="qrow" onclick="sel(this,5)" id="r5" data-type="repair" data-s="missing field bnp paribas field 70 45000 9a0b1c2d">
+      <div class="pri p3">6</div><div><div class="exc-type">Missing mandatory field</div><div class="exc-sub">BNP Paribas · Field 70 absent</div></div><div class="amt">$45,000</div><div class="timer" id="t5">4:20:00</div><div><div class="conf-lbl">97% — auto-fix</div><div class="cbar-w"><div class="cbar" style="width:97%;background:var(--green)"></div></div></div><div><span class="tag t-grn">Auto-resolve</span></div>
+    </div>
+    <div class="qrow" onclick="sel(this,6)" id="r6" data-type="nostro" data-s="cutoff chips queue 1800000 predictive alert">
+      <div class="pri p3">7</div><div><div class="exc-type">Cut-off risk — CHIPS</div><div class="exc-sub">3 payments · Queue depth 94%</div></div><div class="amt">$1,800,000</div><div class="timer" id="t6">4:12:00</div><div><div class="conf-lbl">79% — monitor</div><div class="cbar-w"><div class="cbar" style="width:79%;background:var(--amber)"></div></div></div><div><span class="tag t-pur">Predictive</span></div>
+    </div>
+    <div class="qrow" onclick="sel(this,7)" id="r7" data-type="return" data-s="recall ubs zurich mt192 cancellation 680000 3e4f5a6b">
+      <div class="pri p3">8</div><div><div class="exc-type">Recall request — MT192</div><div class="exc-sub">UBS Zurich · Pre-settlement</div></div><div class="amt">$680,000</div><div class="timer" id="t7">4:45:00</div><div><div class="conf-lbl">83% — recall</div><div class="cbar-w"><div class="cbar" style="width:83%;background:var(--green)"></div></div></div><div><span class="tag t-blu">Recall</span></div>
+    </div>
+  </div>
+
+  <div class="detail" id="d0">
+    <div class="dh"><div><div class="dt">Sanctions hold — HSBC India <span class="tag t-red" style="margin-left:8px">P1 · Urgent</span></div><div class="duetr">UETR: 8f3a2b1c-4d5e-6f7a-8b9c-0d1e2f3a4b5c</div></div><span class="tag t-amb">Manual review</span></div>
+    <div class="ai-box"><div class="ai-lbl">AI triage · 62% confidence</div><div class="ai-text">Name match on ordering customer "Mehta Trading Ltd" scores 71% similarity to OFAC SDN entity "Mehta Trading LLC" (designated 2019). Adverse media: 0 results in 24h. Company registration provided — recommend verifying against MCA India database. False positive probability: 74%. Value $4.2M exceeds $1M auto-resolve threshold. Compliance review required within 47 minutes to meet value date.</div></div>
+    <div class="fields">
+      <div class="field"><div class="fl">Ordering customer</div><div class="fv">Mehta Trading Ltd, Mumbai</div></div>
+      <div class="field"><div class="fl">Beneficiary</div><div class="fv">Acme Commodities LLC, Dubai</div></div>
+      <div class="field"><div class="fl">Amount</div><div class="fv">USD 4,200,000</div></div>
+      <div class="field"><div class="fl">SDN match score</div><div class="fv" style="color:#EF9F27">71% — borderline</div></div>
+      <div class="field"><div class="fl">Purpose code</div><div class="fv">TRAD (commodity trade)</div></div>
+      <div class="field"><div class="fl">Prior transactions</div><div class="fv">12 clean · 24 months</div></div>
+    </div>
+    <div class="actions">
+      <button class="btn-a" onclick="res(0,'Released — false positive confirmed by compliance')">Release payment</button>
+      <button class="btn-r" onclick="res(0,'Held — escalated to OFAC compliance team')">Hold for OFAC review</button>
+      <button class="btn-e" onclick="res(0,'Escalated to senior compliance officer')">Escalate</button>
+    </div>
+    <div class="toast" id="tk0"></div>
+  </div>
+
+  <div class="detail" id="d1">
+    <div class="dh"><div><div class="dt">SWIFT field repair — DBS Singapore <span class="tag t-grn" style="margin-left:8px">Auto-resolvable</span></div><div class="duetr">UETR: 2c3d4e5f-6a7b-8c9d-0e1f-2a3b4c5d6e7f</div></div><span class="tag t-grn">94% confidence</span></div>
+    <div class="ai-box"><div class="ai-lbl">AI repair engine · 94% confidence</div><div class="ai-text">BIC in field 57A truncated: "DBSSSGSG" → correct form "DBSSSGSGXXX". Verified against SWIFT BIC directory. Pattern match: 47 prior instances, 100% success rate. Auto-repair ready — will resubmit to CHIPS within 90 seconds of approval.</div></div>
+    <div class="fields">
+      <div class="field"><div class="fl">Error field</div><div class="fv">57A — Account with institution</div></div>
+      <div class="field"><div class="fl">Original BIC</div><div class="fv" style="color:var(--red);font-family:var(--font-mono)">DBSSSGSG</div></div>
+      <div class="field"><div class="fl">Corrected BIC</div><div class="fv" style="color:#97C459;font-family:var(--font-mono)">DBSSSGSGXXX</div></div>
+      <div class="field"><div class="fl">Prior instances</div><div class="fv">47 — 100% success rate</div></div>
+    </div>
+    <div class="actions">
+      <button class="btn-a" onclick="res(1,'BIC auto-repair approved — resubmitted to CHIPS')">Approve auto-fix</button>
+      <button class="btn-e" onclick="res(1,'Sent to manual repair queue')">Override to manual</button>
+    </div>
+    <div class="toast" id="tk1"></div>
+  </div>
+
+  <div class="detail" id="d2">
+    <div class="dh"><div><div class="dt">Nostro break — JPM Frankfurt <span class="tag t-grn" style="margin-left:8px">Match found</span></div><div class="duetr">Break ID: NOST-2026-05-07-0041</div></div><span class="tag t-grn">88% confidence</span></div>
+    <div class="ai-box"><div class="ai-lbl">Reconciliation engine · 88% confidence</div><div class="ai-text">Unmatched USD 250,000 debit matched to pending MT910 from Deutsche Bank (exact amount, same value date, expected counterparty). MT910 delayed 23 minutes — within normal variance (p95 = 31 min). Recommend marking as pending match and auto-confirming on MT910 receipt.</div></div>
+    <div class="fields">
+      <div class="field"><div class="fl">Break amount</div><div class="fv">USD 250,000 debit</div></div>
+      <div class="field"><div class="fl">Matched to</div><div class="fv">Pending MT910 · Deutsche Bank</div></div>
+      <div class="field"><div class="fl">Break age</div><div class="fv">23 min (p95: 31 min)</div></div>
+      <div class="field"><div class="fl">Recommendation</div><div class="fv">Auto-confirm on receipt</div></div>
+    </div>
+    <div class="actions">
+      <button class="btn-a" onclick="res(2,'Pending match confirmed — auto-close on MT910')">Mark pending match</button>
+      <button class="btn-e" onclick="res(2,'Manual investigation opened')">Investigate manually</button>
+    </div>
+    <div class="toast" id="tk2"></div>
+  </div>
+
+  <div class="detail" id="d3">
+    <div class="dh"><div><div class="dt">Return — AC02 Commerzbank <span class="tag t-blu" style="margin-left:8px">Client notify</span></div><div class="duetr">UETR: 5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b</div></div><span class="tag t-grn">91% confidence</span></div>
+    <div class="ai-box"><div class="ai-lbl">Return handler · 91% confidence</div><div class="ai-text">Payment returned AC02 (account closed). Client notification drafted. Return credit memo prepared — funds to originator within T+2. Standard workflow, no investigation needed. Draft notification ready for one-click send to Apex Trading Corp.</div></div>
+    <div class="fields">
+      <div class="field"><div class="fl">Return reason</div><div class="fv">AC02 — Account closed</div></div>
+      <div class="field"><div class="fl">Returning bank</div><div class="fv">Commerzbank AG</div></div>
+      <div class="field"><div class="fl">Client to notify</div><div class="fv">Apex Trading Corp</div></div>
+      <div class="field"><div class="fl">Return credit</div><div class="fv">T+2 business days</div></div>
+    </div>
+    <div class="actions">
+      <button class="btn-a" onclick="res(3,'Client notified — return credit memo initiated')">Send notification + credit</button>
+      <button class="btn-e" onclick="res(3,'Held — RM to call client first')">Hold for RM call</button>
+    </div>
+    <div class="toast" id="tk3"></div>
+  </div>
+
+  <div class="detail" id="d4">
+    <div class="dh"><div><div class="dt">AML hold — structuring pattern <span class="tag t-red" style="margin-left:8px">Escalate</span></div><div class="duetr">UETR: 7b8c9d0e-1f2a-3b4c-5d6e-7f8a9b0c1d2e</div></div><span class="tag t-red">45% confidence — low</span></div>
+    <div class="ai-box"><div class="ai-lbl">AML engine · 45% — manual required</div><div class="ai-text">Flagged for structuring: 4 payments of $825,000 each from same originator in 72h, all just below $1M reporting threshold. Classic structuring signature. Confidence too low for automated decision. Recommend SAR filing if pattern confirmed by compliance.</div></div>
+    <div class="fields">
+      <div class="field"><div class="fl">Flag reason</div><div class="fv">Structuring — 4 payments</div></div>
+      <div class="field"><div class="fl">Pattern window</div><div class="fv">72 hours</div></div>
+      <div class="field"><div class="fl">Each payment</div><div class="fv">$825,000 (below $1M)</div></div>
+      <div class="field"><div class="fl">Total value</div><div class="fv">$3,300,000</div></div>
+    </div>
+    <div class="actions">
+      <button class="btn-r" onclick="res(4,'Held — SAR referral submitted to compliance')">Hold + SAR referral</button>
+      <button class="btn-e" onclick="res(4,'Escalated to BSA officer for dual review')">Escalate to BSA officer</button>
+    </div>
+    <div class="toast" id="tk4"></div>
+  </div>
+
+  <div class="detail" id="d5">
+    <div class="dh"><div><div class="dt">Missing field — BNP Paribas <span class="tag t-grn" style="margin-left:8px">Auto-resolvable</span></div><div class="duetr">UETR: 9a0b1c2d-3e4f-5a6b-7c8d-9e0f1a2b3c4d</div></div><span class="tag t-grn">97% confidence</span></div>
+    <div class="ai-box"><div class="ai-lbl">Field repair engine · 97% confidence</div><div class="ai-text">Mandatory field 70 (remittance info) absent. Based on purpose code SALA and originator history, standard text: "Monthly salary payment — May 2026". Applied to 23 prior BNP SALA payments. Auto-applying and resubmitting immediately.</div></div>
+    <div class="fields">
+      <div class="field"><div class="fl">Missing field</div><div class="fv">Field 70 — Remittance info</div></div>
+      <div class="field"><div class="fl">AI suggestion</div><div class="fv">Monthly salary — May 2026</div></div>
+      <div class="field"><div class="fl">Prior instances</div><div class="fv">23 — 100% success</div></div>
+      <div class="field"><div class="fl">Value</div><div class="fv">$45,000 — below threshold</div></div>
+    </div>
+    <div class="actions">
+      <button class="btn-a" onclick="res(5,'Field 70 auto-populated — resubmitted')">Approve auto-fix</button>
+      <button class="btn-e" onclick="res(5,'Manual review requested')">Review manually</button>
+    </div>
+    <div class="toast" id="tk5"></div>
+  </div>
+
+  <div class="detail" id="d6">
+    <div class="dh"><div><div class="dt">Cut-off risk — CHIPS queue <span class="tag t-pur" style="margin-left:8px">Predictive</span></div><div class="duetr">Alert: CUTOFF-2026-05-07-14:23:07</div></div><span class="tag t-amb">21% miss probability</span></div>
+    <div class="ai-box"><div class="ai-lbl">Predictive model · CHIPS cut-off forecast</div><div class="ai-text">CHIPS queue at 94% of historical pre-cut-off volume. 3 USD payments ($1.8M) have today value date and are not in priority queue. Miss probability: 21% without action. Fedwire fallback available at $2,800/payment extra cost. Recommend priority escalation now.</div></div>
+    <div class="fields">
+      <div class="field"><div class="fl">Payments at risk</div><div class="fv">3 payments, $1.8M total</div></div>
+      <div class="field"><div class="fl">Miss probability</div><div class="fv" style="color:#EF9F27">21% if no action</div></div>
+      <div class="field"><div class="fl">Fedwire fallback</div><div class="fv">Available · $2,800/payment</div></div>
+      <div class="field"><div class="fl">CHIPS cut-off</div><div class="fv">17:00 ET</div></div>
+    </div>
+    <div class="actions">
+      <button class="btn-a" onclick="res(6,'All 3 payments moved to CHIPS priority queue')">Escalate to priority queue</button>
+      <button class="btn-e" onclick="res(6,'Fedwire fallback pre-authorised')">Pre-authorise Fedwire</button>
+    </div>
+    <div class="toast" id="tk6"></div>
+  </div>
+
+  <div class="detail" id="d7">
+    <div class="dh"><div><div class="dt">Recall — UBS Zurich MT192 <span class="tag t-blu" style="margin-left:8px">Pre-settlement</span></div><div class="duetr">UETR: 3e4f5a6b-7c8d-9e0f-1a2b-3c4d5e6f7a8b</div></div><span class="tag t-grn">83% confidence</span></div>
+    <div class="ai-box"><div class="ai-lbl">Recall engine · 83% confidence</div><div class="ai-text">MT192 received 13:47 ET. Payment in CHIPS netting queue — still reversible. Standard MT292 acceptance procedure: remove from queue, return funds to UBS. Completion ~45 minutes. No financial loss to JPMorgan.</div></div>
+    <div class="fields">
+      <div class="field"><div class="fl">Recall received</div><div class="fv">13:47 ET today</div></div>
+      <div class="field"><div class="fl">Settlement status</div><div class="fv" style="color:#97C459">Pre-settlement ✓</div></div>
+      <div class="field"><div class="fl">Recall amount</div><div class="fv">USD 680,000</div></div>
+      <div class="field"><div class="fl">Est. completion</div><div class="fv">~45 minutes</div></div>
+    </div>
+    <div class="actions">
+      <button class="btn-a" onclick="res(7,'MT292 sent — payment removed from CHIPS queue')">Accept recall</button>
+      <button class="btn-r" onclick="res(7,'Recall rejected — post-settlement')">Reject recall</button>
+    </div>
+    <div class="toast" id="tk7"></div>
+  </div>
+</div>
+
+<div id="np" class="pane">
+  <div class="sh">Intraday nostro positions — USD accounts</div>
+  <div style="border:0.5px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin-bottom:12px">
+    <div class="nostro-t" style="font-size:10px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;border-bottom:0.5px solid var(--border2);padding-bottom:8px">
+      <div>Account</div><div>Balance vs peak forecast</div><div style="text-align:right">Balance</div><div style="text-align:right">Status</div>
+    </div>
+    <div class="nostro-t"><div style="font-weight:500">JPM New York</div><div><div class="nb-w"><div class="nb-f" style="width:82%;background:var(--green)"></div></div><div style="font-size:10px;color:var(--text3);margin-top:2px">$4.2B / $5.1B peak</div></div><div style="text-align:right;font-weight:500;font-family:var(--font-mono);font-size:11px">$4.2B</div><div style="text-align:right"><span class="tag t-grn">OK</span></div></div>
+    <div class="nostro-t"><div style="font-weight:500">JPM London</div><div><div class="nb-w"><div class="nb-f" style="width:68%;background:var(--green)"></div></div><div style="font-size:10px;color:var(--text3);margin-top:2px">$1.8B / $2.6B peak</div></div><div style="text-align:right;font-weight:500;font-family:var(--font-mono);font-size:11px">$1.8B</div><div style="text-align:right"><span class="tag t-grn">OK</span></div></div>
+    <div class="nostro-t"><div style="font-weight:500">JPM Frankfurt</div><div><div class="nb-w"><div class="nb-f" style="width:31%;background:var(--amber)"></div></div><div style="font-size:10px;color:var(--text3);margin-top:2px">$310M / $1.0B peak</div></div><div style="text-align:right;font-weight:500;font-family:var(--font-mono);font-size:11px">$310M</div><div style="text-align:right"><span class="tag t-amb">Watch</span></div></div>
+    <div class="nostro-t"><div style="font-weight:500">JPM Tokyo</div><div><div class="nb-w"><div class="nb-f" style="width:91%;background:var(--green)"></div></div><div style="font-size:10px;color:var(--text3);margin-top:2px">$890M / $980M peak</div></div><div style="text-align:right;font-weight:500;font-family:var(--font-mono);font-size:11px">$890M</div><div style="text-align:right"><span class="tag t-grn">OK</span></div></div>
+    <div class="nostro-t"><div style="font-weight:500">JPM Sydney</div><div><div class="nb-w"><div class="nb-f" style="width:58%;background:var(--green)"></div></div><div style="font-size:10px;color:var(--text3);margin-top:2px">$420M / $730M peak</div></div><div style="text-align:right;font-weight:500;font-family:var(--font-mono);font-size:11px">$420M</div><div style="text-align:right"><span class="tag t-grn">OK</span></div></div>
+  </div>
+  <div style="background:var(--amber-bg);border:0.5px solid var(--amber-border);border-radius:6px;padding:10px 14px;font-size:12px;color:#EF9F27">JPM Frankfurt below 35% threshold — consider intraday sweep from JPM NY. Estimated shortfall: $190M if all pending payments settle simultaneously.</div>
+</div>
+
+<div id="ap" class="pane">
+  <div class="sh">Today's audit trail</div>
+  <div style="border:0.5px solid var(--border);border-radius:8px;padding:0.75rem 1.25rem">
+    <div id="alog">
+      <div class="arow"><div class="atime">14:31</div><div class="amsg">Auto-resolved: BNP Paribas SWIFT repair (field 23B) · Confidence 96% · Analyst: System</div></div>
+      <div class="arow"><div class="atime">14:18</div><div class="amsg">Manual release: Citibank sanctions hold — false positive confirmed · Analyst: R. Patel · Dual-approved</div></div>
+      <div class="arow"><div class="atime">13:55</div><div class="amsg">Auto-resolved: Nostro break JPM London · MT910 matched · Confidence 91%</div></div>
+      <div class="arow"><div class="atime">13:42</div><div class="amsg">Return credit initiated: ICICI Bank AC01 · Client notified · $340,000</div></div>
+      <div class="arow"><div class="atime">13:30</div><div class="amsg">Escalated: ABN AMRO structuring flag · BSA officer assigned · Case #1142</div></div>
+      <div class="arow"><div class="atime">13:11</div><div class="amsg">Auto-resolved: Barclays field 57A BIC repair · Confidence 98% · Resubmitted to CHIPS</div></div>
+      <div class="arow" id="alive" style="display:none"><div class="atime" style="color:#97C459">now</div><div class="amsg" id="alivemsg" style="color:#97C459"></div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tp" class="pane">
+  <div class="sh">Exception volume by type — today</div>
+  <div style="border:0.5px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin-bottom:14px">
+    <div class="trow"><div style="min-width:120px;color:var(--text2)">SWIFT repair</div><div class="tbw"><div class="tbf" style="width:85%"></div></div><div style="min-width:36px;text-align:right;font-weight:500;font-family:var(--font-mono)">34</div></div>
+    <div class="trow"><div style="min-width:120px;color:var(--text2)">Nostro breaks</div><div class="tbw"><div class="tbf" style="width:42%"></div></div><div style="min-width:36px;text-align:right;font-weight:500;font-family:var(--font-mono)">17</div></div>
+    <div class="trow"><div style="min-width:120px;color:var(--text2)">Returns</div><div class="tbw"><div class="tbf" style="width:35%"></div></div><div style="min-width:36px;text-align:right;font-weight:500;font-family:var(--font-mono)">14</div></div>
+    <div class="trow"><div style="min-width:120px;color:var(--text2)">Sanctions holds</div><div class="tbw"><div class="tbf" style="width:22%;background:var(--red)"></div></div><div style="min-width:36px;text-align:right;font-weight:500;font-family:var(--font-mono)">9</div></div>
+    <div class="trow"><div style="min-width:120px;color:var(--text2)">Cut-off alerts</div><div class="tbw"><div class="tbf" style="width:12%;background:var(--amber)"></div></div><div style="min-width:36px;text-align:right;font-weight:500;font-family:var(--font-mono)">5</div></div>
+    <div class="trow"><div style="min-width:120px;color:var(--text2)">AML holds</div><div class="tbw"><div class="tbf" style="width:8%;background:var(--red)"></div></div><div style="min-width:36px;text-align:right;font-weight:500;font-family:var(--font-mono)">3</div></div>
+  </div>
+  <div class="sh">Auto-resolution rate by type</div>
+  <div style="border:0.5px solid var(--border);border-radius:8px;padding:1rem 1.25rem">
+    <div class="trow"><div style="min-width:120px;color:var(--text2)">SWIFT repair</div><div class="tbw"><div class="tbf" style="width:91%;background:var(--green)"></div></div><div style="min-width:42px;text-align:right;font-weight:500;font-family:var(--font-mono);color:#97C459">91%</div></div>
+    <div class="trow"><div style="min-width:120px;color:var(--text2)">Returns</div><div class="tbw"><div class="tbf" style="width:88%;background:var(--green)"></div></div><div style="min-width:42px;text-align:right;font-weight:500;font-family:var(--font-mono);color:#97C459">88%</div></div>
+    <div class="trow"><div style="min-width:120px;color:var(--text2)">Nostro breaks</div><div class="tbw"><div class="tbf" style="width:76%;background:var(--green)"></div></div><div style="min-width:42px;text-align:right;font-weight:500;font-family:var(--font-mono);color:#97C459">76%</div></div>
+    <div class="trow"><div style="min-width:120px;color:var(--text2)">Sanctions holds</div><div class="tbw"><div class="tbf" style="width:0%"></div></div><div style="min-width:42px;text-align:right;font-weight:500;font-family:var(--font-mono);color:var(--red)">0%</div></div>
+    <div class="trow"><div style="min-width:120px;color:var(--text2)">AML holds</div><div class="tbw"><div class="tbf" style="width:0%"></div></div><div style="min-width:42px;text-align:right;font-weight:500;font-family:var(--font-mono);color:var(--red)">0%</div></div>
+  </div>
+</div>
+
+<footer class="page-footer">
+  <div class="pf-left">Built by <span>Megha Bhasker</span> · AI Product Manager · Product case study for JPMorgan Global Clearing</div>
+  <div class="pf-links">
+    <a href="https://meghabhasker.me">Portfolio</a>
+    <a href="https://linkedin.com/in/megha-bhasker">LinkedIn</a>
+    <a href="https://github.com/MeghaBhasker">GitHub</a>
+  </div>
+</footer>
+
+<script>
+var cur=-1,resolved=new Set(),open=8,autoR=14;
+var ts=[4440,6120,11100,12600,14100,15600,15120,17100];
+function fmt(s){var h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60;return h+':'+(m<10?'0':'')+m+':'+(sc<10?'0':'')+sc;}
+function sel(el,i){
+  if(resolved.has(i))return;
+  document.querySelectorAll('.qrow').forEach(r=>r.classList.remove('sel'));
+  document.querySelectorAll('.detail').forEach(d=>d.classList.remove('open'));
+  if(cur===i){cur=-1;return;}
+  el.classList.add('sel');
+  document.getElementById('d'+i).classList.add('open');
+  cur=i;
+}
+function res(i,msg){
+  resolved.add(i);
+  document.getElementById('r'+i).classList.add('resolved');
+  document.getElementById('r'+i).classList.remove('sel');
+  document.getElementById('d'+i).classList.remove('open');
+  var tk=document.getElementById('tk'+i);
+  tk.textContent=msg;tk.classList.add('show');
+  open=Math.max(0,open-1);autoR++;
+  document.getElementById('m-open').textContent=open;
+  document.getElementById('m-auto').textContent=autoR;
+  var al=document.getElementById('alive');
+  document.getElementById('alivemsg').textContent=msg;
+  al.style.display='flex';cur=-1;
+}
+function showPane(id,tab){
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById(id).classList.add('on');tab.classList.add('on');
+}
+function filt(type,btn){
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+  document.querySelectorAll('.qrow').forEach(r=>{r.style.display=(type==='all'||r.dataset.type===type)?'grid':'none';});
+}
+function srch(q){
+  var lq=q.toLowerCase();
+  document.querySelectorAll('.qrow').forEach(r=>{r.style.display=(!lq||r.dataset.s.includes(lq))?'grid':'none';});
+}
+setInterval(function(){
+  ts=ts.map(s=>Math.max(0,s-1));
+  ts.forEach(function(s,i){
+    var el=document.getElementById('t'+i);
+    if(el&&!resolved.has(i)){el.textContent=fmt(s);el.style.color=s<3600?'var(--red)':s<7200?'var(--amber)':'var(--text3)';}
+  });
+  var ft=document.getElementById('ctag');
+  if(ft)ft.textContent='Fedwire '+fmt(ts[0]);
+},1000);
+</script>
+</body>
+</html>
