@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI Job Search Agent Demo · Megha Bhasker</title>
+<meta name="description" content="Interactive AI job search agent with match scoring, gap analysis, resume tailoring, application tracker, and interview prep. Built by Megha Bhasker, AI Product Manager."/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FAFAF8;--surface:#FFFFFF;--surface2:#F7F5F0;
+  --border:#E8E4DC;--border2:#E0DDD8;
+  --text:#1A1A1A;--text2:#555;--text3:#888;
+  --green:#2D7D46;--green-bg:#EEF9F4;--green-border:#C3E8D0;
+  --amber:#9A6200;--amber-bg:#FEF8EE;--amber-border:#FAE5B0;
+  --red:#C0392B;--red-bg:#FEF0EE;--red-border:#FAD4CF;
+  --blue:#185FA5;--blue-bg:#EEF4FF;--blue-border:#C5D8F8;
+  --purple:#5B3DB5;--purple-bg:#F4F0FE;--purple-border:#D4C8F8;
+  --font-sans:'DM Sans',sans-serif;--font-mono:'DM Mono',monospace;--font-serif:'Fraunces',serif;
+}
+html{font-size:14px;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:var(--font-sans);min-height:100vh}
+.page-header{background:var(--surface);border-bottom:1.5px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--blue-bg);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--blue);flex-shrink:0}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:500;border:1px solid}
+.pill-dark{background:var(--surface2);color:var(--text2);border-color:var(--border2)}
+.pill-green{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero{background:var(--surface);border-bottom:1.5px solid var(--border);padding:2rem 2rem 1.5rem;display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:end}
+.hero-eyebrow{font-size:11px;font-weight:500;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.hero-title{font-family:var(--font-serif);font-size:28px;font-weight:300;color:var(--text);line-height:1.2;margin-bottom:8px}
+.hero-title em{font-style:italic;color:var(--text)}
+.hero-desc{font-size:13px;color:var(--text2);line-height:1.65;max-width:520px}
+.hstack{display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+.tag{display:inline-block;font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;border:1px solid;white-space:nowrap}
+.t-grn{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+.t-amb{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-border)}
+.t-red{background:var(--red-bg);color:var(--red);border-color:var(--red-border)}
+.t-blu{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-border)}
+.t-pur{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-border)}
+.t-gry{background:var(--surface2);color:var(--text3);border-color:var(--border2)}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border-bottom:1.5px solid var(--border)}
+.met{padding:1rem 1.5rem;border-right:1px solid var(--border)}
+.met:last-child{border-right:none}
+.met-val{font-size:24px;font-weight:500;color:var(--text);transition:all .3s}
+.met-lbl{font-size:11px;color:var(--text3);margin-top:2px}
+.met-delta{font-size:11px;margin-top:3px}
+.up{color:var(--green)}.dn{color:var(--red)}
+.tabs{background:var(--surface);border-bottom:1.5px solid var(--border);padding:0 2rem;display:flex;overflow-x:auto}
+.tab{padding:10px 14px;font-size:12px;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-1.5px;transition:all .15s;font-weight:500;white-space:nowrap}
+.tab:hover{color:var(--text2)}
+.tab.on{color:var(--text);border-bottom-color:var(--text)}
+.pane{display:none;padding:1.5rem 2rem}
+.pane.on{display:block}
+.toolbar{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.fbtn{padding:4px 11px;border-radius:20px;border:1px solid var(--border2);font-size:11px;cursor:pointer;background:var(--surface);color:var(--text3);transition:all .15s;font-family:var(--font-sans);display:flex;align-items:center;gap:4px}
+.fbtn:hover{border-color:var(--text);color:var(--text)}
+.fbtn.on{background:var(--text);color:var(--surface);border-color:var(--text)}
+.job-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;margin-bottom:10px;cursor:pointer;transition:border-color .15s}
+.job-card:hover{border-color:var(--border2)}
+.job-card.sel{border-color:var(--text);border-width:1.5px}
+.detail{border:1px solid var(--border2);border-radius:10px;padding:1.25rem;margin-bottom:12px;background:var(--surface);display:none}
+.detail.open{display:block}
+.ai-box{background:var(--blue-bg);border-radius:8px;padding:10px 14px;margin:10px 0;border:1px solid var(--blue-border)}
+.ai-lbl{font-size:10px;font-weight:500;color:var(--blue);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.ai-txt{font-size:12px;color:#1A4A8A;line-height:1.6}
+.mb-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #F0EDE8;font-size:12px}
+.mb-row:last-child{border-bottom:none}
+.mb-lbl{min-width:140px;color:var(--text2);font-size:11px}
+.mb-w{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.mb-f{height:100%;border-radius:2px;transition:width .5s}
+.mb-sc{min-width:28px;text-align:right;font-weight:500;font-size:11px}
+.gap-row{padding:7px 10px;border-radius:8px;margin-bottom:5px;font-size:12px;border:1px solid;display:flex;align-items:start;gap:7px;line-height:1.45}
+.g-grn{background:var(--green-bg);border-color:var(--green-border);color:var(--green)}
+.g-amb{background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber)}
+.g-red{background:var(--red-bg);border-color:var(--red-border);color:var(--red)}
+.actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.btn-p{padding:7px 14px;border-radius:8px;background:var(--text);color:var(--surface);font-size:12px;font-weight:500;cursor:pointer;border:none;font-family:var(--font-sans)}
+.btn-s{padding:7px 14px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);color:var(--text3);font-size:12px;cursor:pointer;font-family:var(--font-sans)}
+.toast{font-size:12px;color:var(--green);background:var(--green-bg);border-radius:8px;padding:8px 12px;margin-top:8px;display:none;border:1px solid var(--green-border);font-family:var(--font-mono)}
+.toast.show{display:block}
+.sh{font-size:10px;font-weight:500;letter-spacing:.07em;color:var(--text3);text-transform:uppercase;margin:0 0 8px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;margin-bottom:10px}
+.msg{padding:9px 13px;border-radius:10px;margin-bottom:8px;font-size:13px;line-height:1.5;max-width:88%}
+.msg.ai{background:var(--surface2);color:var(--text);border-radius:10px 10px 10px 4px}
+.msg.user{background:var(--blue-bg);color:var(--blue);margin-left:auto;border-radius:10px 10px 4px 10px}
+.chip{display:inline-block;padding:4px 11px;border-radius:20px;border:1px solid var(--border2);font-size:11px;cursor:pointer;margin:3px;color:var(--text3);background:var(--surface);transition:all .15s}
+.chip:hover{border-color:var(--text);color:var(--text)}
+.trow{display:grid;grid-template-columns:1fr 80px 72px 60px;gap:8px;padding:8px 14px;border-top:1px solid #F0EDE8;align-items:center;font-size:12px;background:var(--surface)}
+.sdot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:4px}
+.prog-bar-w{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin:6px 0 12px}
+.prog-bar{height:100%;border-radius:3px;background:var(--green);transition:width .4s}
+.week-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #F0EDE8;font-size:12px;cursor:pointer;user-select:none}
+.week-row:last-child{border-bottom:none}
+.chk{width:16px;height:16px;border-radius:3px;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.chk.done{background:var(--green-bg);border-color:var(--green-border)}
+.diff-old{background:var(--red-bg);border:1px solid var(--red-border);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--red);margin-bottom:4px;font-family:var(--font-mono);line-height:1.5}
+.diff-new{background:var(--green-bg);border:1px solid var(--green-border);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--green);font-family:var(--font-mono);line-height:1.5}
+.q-card{border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .15s}
+.q-card:hover{border-color:var(--border2)}
+.q-card.oq{border-color:var(--text)}
+.q-ans{font-size:12px;color:var(--text2);line-height:1.6;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:none}
+.q-ans.show{display:block}
+.page-footer{background:var(--surface);border-top:1.5px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.pf-left{font-size:12px;color:var(--text3)}
+.pf-left span{color:var(--text2)}
+.pf-links{display:flex;gap:16px}
+.pf-links a{font-size:12px;color:var(--text3);text-decoration:none}
+.pf-links a:hover{color:var(--text)}
+@media(max-width:640px){
+  .metrics{grid-template-columns:1fr 1fr}
+  .met{border-right:none;border-bottom:1px solid var(--border)}
+  .hero{grid-template-columns:1fr}
+  .hstack{align-items:flex-start}
+  .pane{padding:1rem}
+  .page-header,.hero,.tabs{padding-left:1rem;padding-right:1rem}
+  .mb-lbl{min-width:90px}
+  .trow{grid-template-columns:1fr 70px 60px}
+  .trow>*:last-child{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="avatar">MB</div>
+    <div>
+      <div style="font-size:13px;font-weight:500;color:var(--text)">Megha Bhasker <span style="font-weight:400;color:var(--text3)">· AI Product Manager</span></div>
+      <div style="font-size:11px;color:var(--text3);margin-top:1px;display:flex;align-items:center;gap:5px"><span class="live-dot"></span>Active search · 87 days to Aug 31 deadline</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap">
+    <span class="pill pill-dark">Product case study</span>
+    <span class="pill pill-green"><span class="live-dot"></span>Live demo</span>
+    <span class="pill pill-dark">Jobright.ai</span>
+  </div>
+</header>
+
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow">AI job search agent · match scoring · gap analysis · resume tailor · interview prep</div>
+    <h1 class="hero-title">AI job search agent<br/><em>that explains its reasoning</em></h1>
+    <p class="hero-desc">An interactive product demo showing what a truly intelligent job search agent looks like — match scoring with explainability, gap analysis, resume diff suggestions, a weekly goals tracker, and interview prep. Built as a case study for Jobright.ai's PM role.</p>
+  </div>
+  <div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:6px;text-align:right">Built by</div>
+    <div class="hstack">
+      <span class="tag t-gry">AI Product Manager</span>
+      <span class="tag t-gry">3+ yrs shipping AI systems</span>
+      <a href="https://meghabhasker.me" style="text-decoration:none"><span class="tag t-gry">meghabhasker.me ↗</span></a>
+    </div>
+  </div>
+</section>
+
+<div class="metrics">
+  <div class="met"><div class="met-val">12</div><div class="met-lbl">New matches today</div><div class="met-delta up">+4 vs yesterday</div></div>
+  <div class="met"><div class="met-val" id="m-app">4</div><div class="met-lbl">Applied this week</div><div class="met-delta dn" id="m-app-d">11 more needed</div></div>
+  <div class="met"><div class="met-val">78%</div><div class="met-lbl">Avg match score</div><div class="met-delta up">+6% vs last week</div></div>
+  <div class="met"><div class="met-val" id="m-days">87</div><div class="met-lbl">Days to deadline</div><div class="met-delta dn">Aug 31 · move fast</div></div>
+</div>
+
+<div class="tabs">
+  <div class="tab on" onclick="sp('mp',this)">Job matches</div>
+  <div class="tab" onclick="sp('ap',this)">AI agent</div>
+  <div class="tab" onclick="sp('tp',this)">Tracker</div>
+  <div class="tab" onclick="sp('rp',this)">Resume tailor</div>
+  <div class="tab" onclick="sp('ip',this)">Interview prep</div>
+</div>
+
+<div id="mp" class="pane on">
+  <div class="toolbar">
+    <button class="fbtn on" onclick="sortJ('score',this)"><i class="ti ti-chart-bar" style="font-size:13px"></i>Best match</button>
+    <button class="fbtn" onclick="sortJ('recent',this)"><i class="ti ti-clock" style="font-size:13px"></i>Most recent</button>
+    <button class="fbtn" id="h1b-btn" onclick="toggleH1b(this)"><i class="ti ti-shield-check" style="font-size:13px"></i>H1B confirmed</button>
+    <span style="font-size:11px;color:var(--text3);margin-left:auto" id="jcount">Showing 4 jobs</span>
+  </div>
+
+  <div id="jlist">
+    <div class="job-card" onclick="oj(this,0)" id="jc0" data-score="87" data-age="1" data-h1b="1">
+      <div style="display:flex;align-items:start;justify-content:space-between;gap:10px;margin-bottom:6px">
+        <div><div style="font-size:13px;font-weight:500">Product Manager, Autonomous Operations</div><div style="font-size:11px;color:var(--text3);margin-top:2px">Expedia Group · Seattle, WA · Full-time</div></div>
+        <svg width="44" height="44" viewBox="0 0 44 44" style="flex-shrink:0"><circle cx="22" cy="22" r="18" fill="none" stroke="#E8E4DC" stroke-width="4"/><circle cx="22" cy="22" r="18" fill="none" stroke="#2D7D46" stroke-width="4" stroke-dasharray="98 14" stroke-dashoffset="28" stroke-linecap="round"/><text x="22" y="26" text-anchor="middle" font-size="11" font-weight="500" fill="#1A1A1A">87%</text></svg>
+      </div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.5;margin-bottom:8px">Autonomous ops PM — self-healing systems, telemetry, observability, responsible AI.</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap"><span class="tag t-grn">Strong match</span><span class="tag t-blu">H1B confirmed</span><span class="tag t-gry">$173K-$277K</span><span class="tag t-gry">1 day ago</span></div>
+    </div>
+    <div class="detail" id="d0">
+      <div style="font-size:14px;font-weight:500;margin-bottom:3px">Expedia Group — PM, Autonomous Operations <span class="tag t-grn" style="margin-left:6px">87%</span></div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Seattle, WA · $173K-$277K · H1B confirmed · Full-time</div>
+      <div class="ai-box"><div class="ai-lbl">Why you match</div><div class="ai-txt">Your routing engine — 5 providers, 8 self-healing fallback strategies, real-time confidence scoring — is architecturally identical to autonomous operations. Telemetry (300K+ API calls) and responsible AI guardrails match their preferred qualifications almost word-for-word.</div></div>
+      <div class="sh" style="margin-top:12px">Match breakdown</div>
+      <div style="margin-bottom:10px">
+        <div class="mb-row"><div class="mb-lbl">AI/ML in production</div><div class="mb-w"><div class="mb-f" style="width:95%;background:#2D7D46"></div></div><div class="mb-sc" style="color:#2D7D46">95%</div></div>
+        <div class="mb-row"><div class="mb-lbl">Telemetry &amp; observability</div><div class="mb-w"><div class="mb-f" style="width:90%;background:#2D7D46"></div></div><div class="mb-sc" style="color:#2D7D46">90%</div></div>
+        <div class="mb-row"><div class="mb-lbl">Responsible AI guardrails</div><div class="mb-w"><div class="mb-f" style="width:92%;background:#2D7D46"></div></div><div class="mb-sc" style="color:#2D7D46">92%</div></div>
+        <div class="mb-row"><div class="mb-lbl">Cross-functional scale</div><div class="mb-w"><div class="mb-f" style="width:48%;background:#EF9F27"></div></div><div class="mb-sc" style="color:#9A6200">48%</div></div>
+      </div>
+      <div class="sh">Gap analysis</div>
+      <div class="gap-row g-grn"><i class="ti ti-check" style="font-size:13px;flex-shrink:0"></i><span>Strong: AI/ML, telemetry, observability, responsible AI</span></div>
+      <div class="gap-row g-amb"><i class="ti ti-alert-triangle" style="font-size:13px;flex-shrink:0"></i><span>Add "autonomous" to your routing engine resume bullet</span></div>
+      <div class="gap-row g-red"><i class="ti ti-x" style="font-size:13px;flex-shrink:0"></i><span>Gap: no SRE experience — prepare root cause investigation story</span></div>
+      <div class="actions">
+        <button class="btn-p" onclick="applyJob(0,'Expedia Group')">Apply now</button>
+        <button class="btn-s" onclick="goTailor(0)">Tailor resume</button>
+        <button class="btn-s" onclick="sp('ip',document.querySelectorAll('.tab')[4])">Interview prep</button>
+      </div>
+      <div class="toast" id="t0"></div>
+    </div>
+
+    <div class="job-card" onclick="oj(this,1)" id="jc1" data-score="82" data-age="0" data-h1b="0">
+      <div style="display:flex;align-items:start;justify-content:space-between;gap:10px;margin-bottom:6px">
+        <div><div style="font-size:13px;font-weight:500">Product Manager, Early Career</div><div style="font-size:11px;color:var(--text3);margin-top:2px">Jobright.ai · United States · Remote</div></div>
+        <svg width="44" height="44" viewBox="0 0 44 44" style="flex-shrink:0"><circle cx="22" cy="22" r="18" fill="none" stroke="#E8E4DC" stroke-width="4"/><circle cx="22" cy="22" r="18" fill="none" stroke="#2D7D46" stroke-width="4" stroke-dasharray="92 20" stroke-dashoffset="28" stroke-linecap="round"/><text x="22" y="26" text-anchor="middle" font-size="11" font-weight="500" fill="#1A1A1A">82%</text></svg>
+      </div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.5;margin-bottom:8px">Build AI job search agents — LLM products, agentic workflows, user research, full PM lifecycle.</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap"><span class="tag t-grn">Strong match</span><span class="tag t-red">Verify H1B</span><span class="tag t-gry">$60K-$100K</span><span class="tag t-gry">Today</span></div>
+    </div>
+    <div class="detail" id="d1">
+      <div style="font-size:14px;font-weight:500;margin-bottom:3px">Jobright.ai — PM, Early Career <span class="tag t-grn" style="margin-left:6px">82%</span></div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Remote · $60K-$100K · Visa: verify · Full-time</div>
+      <div class="ai-box"><div class="ai-lbl">Why you match</div><div class="ai-txt">You've built LLM products with Claude API, shipped AI agents, and owned full PM loops including telemetry and responsible AI design. The "early career" label undersells your 3-year track record. Key risk: small startup — H1B sponsorship costs $5K+ per hire. Email the team before applying.</div></div>
+      <div style="margin-bottom:10px">
+        <div class="mb-row"><div class="mb-lbl">LLM product experience</div><div class="mb-w"><div class="mb-f" style="width:95%;background:#2D7D46"></div></div><div class="mb-sc" style="color:#2D7D46">95%</div></div>
+        <div class="mb-row"><div class="mb-lbl">AI agent building</div><div class="mb-w"><div class="mb-f" style="width:88%;background:#2D7D46"></div></div><div class="mb-sc" style="color:#2D7D46">88%</div></div>
+        <div class="mb-row"><div class="mb-lbl">H1B (startup risk)</div><div class="mb-w"><div class="mb-f" style="width:25%;background:#E24B4A"></div></div><div class="mb-sc" style="color:#C0392B">?</div></div>
+      </div>
+      <div class="gap-row g-grn"><i class="ti ti-check" style="font-size:13px;flex-shrink:0"></i><span>Strong: LLM products, agentic workflows, Claude API, full PM ownership</span></div>
+      <div class="gap-row g-red"><i class="ti ti-x" style="font-size:13px;flex-shrink:0"></i><span>Risk: unconfirmed H1B — verify sponsorship before applying</span></div>
+      <div class="actions">
+        <button class="btn-p" onclick="applyJob(1,'Jobright.ai')">Apply now</button>
+        <button class="btn-s" onclick="goTailor(1)">Tailor resume</button>
+      </div>
+      <div class="toast" id="t1"></div>
+    </div>
+
+    <div class="job-card" onclick="oj(this,2)" id="jc2" data-score="71" data-age="2" data-h1b="1">
+      <div style="display:flex;align-items:start;justify-content:space-between;gap:10px;margin-bottom:6px">
+        <div><div style="font-size:13px;font-weight:500">Product Analyst, Global Clearing</div><div style="font-size:11px;color:var(--text3);margin-top:2px">JPMorgan Chase · Jersey City, NJ · Full-time</div></div>
+        <svg width="44" height="44" viewBox="0 0 44 44" style="flex-shrink:0"><circle cx="22" cy="22" r="18" fill="none" stroke="#E8E4DC" stroke-width="4"/><circle cx="22" cy="22" r="18" fill="none" stroke="#EF9F27" stroke-width="4" stroke-dasharray="80 33" stroke-dashoffset="28" stroke-linecap="round"/><text x="22" y="26" text-anchor="middle" font-size="11" font-weight="500" fill="#1A1A1A">71%</text></svg>
+      </div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.5;margin-bottom:8px">Global clearing ops analyst — cross-border payments, telemetry, AI-assisted workflows.</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap"><span class="tag t-amb">Good match</span><span class="tag t-blu">H1B confirmed</span><span class="tag t-gry">$66K-$97K</span><span class="tag t-gry">2 days ago</span></div>
+    </div>
+    <div class="detail" id="d2">
+      <div style="font-size:14px;font-weight:500;margin-bottom:3px">JPMorgan Chase — Product Analyst <span class="tag t-amb" style="margin-left:6px">71%</span></div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Jersey City, NJ · $66K-$97K · H1B confirmed · Full-time</div>
+      <div class="ai-box"><div class="ai-lbl">Why you match</div><div class="ai-txt">Your telemetry and observability work maps to their product metrics requirement. Routing engine fallback logic mirrors exception management in clearing. Your JPMorgan portfolio demo directly closes the FinTech domain gap.</div></div>
+      <div class="gap-row g-grn"><i class="ti ti-check" style="font-size:13px;flex-shrink:0"></i><span>Strong: AI products, telemetry, automation, requirements documentation</span></div>
+      <div class="gap-row g-red"><i class="ti ti-x" style="font-size:13px;flex-shrink:0"></i><span>Gap: no FinTech/payments domain — portfolio demo bridges this significantly</span></div>
+      <div class="actions">
+        <button class="btn-p" onclick="applyJob(2,'JPMorgan Chase')">Apply now</button>
+        <button class="btn-s" onclick="sp('ip',document.querySelectorAll('.tab')[4])">Interview prep</button>
+      </div>
+      <div class="toast" id="t2"></div>
+    </div>
+
+    <div class="job-card" onclick="oj(this,3)" id="jc3" data-score="64" data-age="0" data-h1b="1">
+      <div style="display:flex;align-items:start;justify-content:space-between;gap:10px;margin-bottom:6px">
+        <div><div style="font-size:13px;font-weight:500">Product Manager, Operations Technology</div><div style="font-size:11px;color:var(--text3);margin-top:2px">Popeyes LK · Miami, FL · Full-time</div></div>
+        <svg width="44" height="44" viewBox="0 0 44 44" style="flex-shrink:0"><circle cx="22" cy="22" r="18" fill="none" stroke="#E8E4DC" stroke-width="4"/><circle cx="22" cy="22" r="18" fill="none" stroke="#EF9F27" stroke-width="4" stroke-dasharray="72 41" stroke-dashoffset="28" stroke-linecap="round"/><text x="22" y="26" text-anchor="middle" font-size="11" font-weight="500" fill="#1A1A1A">64%</text></svg>
+      </div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.5;margin-bottom:8px">AI restaurant ops PM — computer vision, order accuracy, employee tools, pilot execution.</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap"><span class="tag t-amb">Stretch</span><span class="tag t-blu">H1B confirmed</span><span class="tag t-gry">Miami on-site</span><span class="tag t-gry">Today</span></div>
+    </div>
+    <div class="detail" id="d3">
+      <div style="font-size:14px;font-weight:500;margin-bottom:3px">Popeyes LK — PM, Ops Technology <span class="tag t-amb" style="margin-left:6px">64%</span></div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Miami, FL · On-site · H1B (RBI confirmed) · Full-time</div>
+      <div class="ai-box"><div class="ai-lbl">Why you match</div><div class="ai-txt">AI/automation and responsible AI guardrails align with their AI assistant and computer vision tools. Key gaps: no QSR domain or POS data. Relocation willingness removes the biggest screening risk.</div></div>
+      <div class="gap-row g-grn"><i class="ti ti-check" style="font-size:13px;flex-shrink:0"></i><span>Strong: AI products, automation, guardrails, pilot planning</span></div>
+      <div class="gap-row g-red"><i class="ti ti-x" style="font-size:13px;flex-shrink:0"></i><span>Gap: no QSR/restaurant domain or POS data experience</span></div>
+      <div class="actions">
+        <button class="btn-p" onclick="applyJob(3,'Popeyes LK')">Apply now</button>
+      </div>
+      <div class="toast" id="t3"></div>
+    </div>
+  </div>
+</div>
+
+<div id="ap" class="pane">
+  <div style="border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;background:var(--surface);margin-bottom:10px;min-height:260px" id="chatwin">
+    <div class="msg ai">Hi Megha! 12 new matches today. Your top match is Expedia Group at 87% — your routing engine is architecturally identical to what they need. 87 days to your Aug 31 deadline. Want me to prioritize your week?</div>
+    <div id="chatx"></div>
+  </div>
+  <div style="margin-bottom:10px">
+    <div class="sh">Quick actions</div>
+    <span class="chip" onclick="ac('Why is Expedia my top match?')">Why Expedia at 87%?</span>
+    <span class="chip" onclick="ac('Which roles confirm H1B?')">H1B confirmed roles?</span>
+    <span class="chip" onclick="ac('What are my top 3 resume gaps?')">Top resume gaps?</span>
+    <span class="chip" onclick="ac('How many applications this week?')">Weekly target?</span>
+    <span class="chip" onclick="ac('Should I apply to Jobright?')">Apply to Jobright?</span>
+    <span class="chip" onclick="ac('Write an outreach message to Expedia recruiter')">Outreach message?</span>
+  </div>
+  <div style="display:flex;gap:8px">
+    <input type="text" id="cinp" placeholder="Ask your job search agent anything..." style="flex:1;padding:7px 12px;font-size:12px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font-family:var(--font-sans);outline:none" onkeydown="if(event.key==='Enter')sc()"/>
+    <button class="btn-p" style="font-size:12px;padding:7px 16px" onclick="sc()">Send</button>
+  </div>
+</div>
+
+<div id="tp" class="pane">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:8px">
+    <div class="sh" style="margin:0">Active pipeline</div>
+    <div style="font-size:12px;color:var(--text3)" id="wprog-lbl">Week progress: 4 / 15 applications</div>
+  </div>
+  <div class="prog-bar-w"><div class="prog-bar" id="wbar" style="width:27%"></div></div>
+  <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface);margin-bottom:14px">
+    <div style="display:grid;grid-template-columns:1fr 80px 72px 60px;gap:8px;padding:7px 14px;background:var(--surface2);font-size:10px;font-weight:500;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--border)"><div>Role</div><div>Stage</div><div>Applied</div><div>Match</div></div>
+    <div id="tracker-rows">
+      <div class="trow"><div><div style="font-size:12px;font-weight:500">PM, Autonomous Ops</div><div style="font-size:11px;color:var(--text3)">Expedia Group</div></div><div style="display:flex;align-items:center"><span class="sdot" style="background:#2D7D46"></span><span style="font-size:11px;color:var(--text3)">Applied</span></div><div style="font-size:11px;color:var(--text3)">Today</div><div><span class="tag t-grn">87%</span></div></div>
+      <div class="trow"><div><div style="font-size:12px;font-weight:500">PM, Ops Technology</div><div style="font-size:11px;color:var(--text3)">Popeyes LK</div></div><div style="display:flex;align-items:center"><span class="sdot" style="background:#2D7D46"></span><span style="font-size:11px;color:var(--text3)">Applied</span></div><div style="font-size:11px;color:var(--text3)">Today</div><div><span class="tag t-amb">64%</span></div></div>
+      <div class="trow"><div><div style="font-size:12px;font-weight:500">Product Analyst</div><div style="font-size:11px;color:var(--text3)">JPMorgan Chase</div></div><div style="display:flex;align-items:center"><span class="sdot" style="background:#EF9F27"></span><span style="font-size:11px;color:var(--text3)">Screening</span></div><div style="font-size:11px;color:var(--text3)">2 days ago</div><div><span class="tag t-amb">71%</span></div></div>
+      <div class="trow"><div><div style="font-size:12px;font-weight:500">PM Procurement</div><div style="font-size:11px;color:var(--text3)">TekWissen</div></div><div style="display:flex;align-items:center"><span class="sdot" style="background:#7F77DD"></span><span style="font-size:11px;color:var(--text3)">Interview</span></div><div style="font-size:11px;color:var(--text3)">3 days ago</div><div><span class="tag t-gry">—</span></div></div>
+    </div>
+  </div>
+  <div class="sh">This week's goals</div>
+  <div class="card" style="padding:0.75rem 1.25rem">
+    <div class="week-row" onclick="chk(this)"><div class="chk done"><i class="ti ti-check" style="font-size:10px;color:var(--green)"></i></div><span style="color:var(--text3)">Update LinkedIn headline and About section</span></div>
+    <div class="week-row" onclick="chk(this)"><div class="chk done"><i class="ti ti-check" style="font-size:10px;color:var(--green)"></i></div><span style="color:var(--text3)">Apply to 5 H1B-confirmed companies</span></div>
+    <div class="week-row" onclick="chk(this)"><div class="chk"></div><span>Send 10 personalized LinkedIn outreach messages</span></div>
+    <div class="week-row" onclick="chk(this)"><div class="chk"></div><span>Complete 2 mock interviews on Pramp</span></div>
+    <div class="week-row" onclick="chk(this)"><div class="chk"></div><span>Write 1 LinkedIn post about AI PM work</span></div>
+    <div class="week-row" onclick="chk(this)"><div class="chk"></div><span>Reach 15 total applications this week</span></div>
+  </div>
+  <div style="margin-top:10px;padding:10px 14px;background:var(--amber-bg);border-radius:8px;font-size:12px;color:var(--amber);border:1px solid var(--amber-border)"><i class="ti ti-alert-triangle" style="font-size:14px;margin-right:6px;vertical-align:-2px"></i>Agent recommendation: send 11+ more applications this week. 87 days until Aug 31 — pace matters now.</div>
+</div>
+
+<div id="rp" class="pane">
+  <div class="sh">Resume tailoring engine</div>
+  <div style="margin-bottom:14px">
+    <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:6px">Select target role</label>
+    <select id="rsel" onchange="updateTailor()" style="width:100%;padding:7px 10px;font-size:12px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font-family:var(--font-sans)">
+      <option value="0">Expedia Group — PM, Autonomous Operations (87%)</option>
+      <option value="1">Jobright.ai — PM, Early Career (82%)</option>
+      <option value="2">JPMorgan Chase — Product Analyst (71%)</option>
+      <option value="3">Popeyes LK — PM, Ops Technology (64%)</option>
+    </select>
+  </div>
+  <div id="tailor-body">
+    <div class="sh" id="tailor-sh">Critical changes for Expedia Group</div>
+    <div class="card">
+      <div style="font-size:12px;font-weight:500;margin-bottom:6px">Summary — rewrite opening</div>
+      <div class="diff-old">Current: "AI Product Manager with 3+ years shipping AI-integrated platforms..."</div>
+      <div class="diff-new">Better: "Product Manager with 3+ years shipping autonomous decision systems and AI-integrated platforms..."</div>
+    </div>
+    <div class="card">
+      <div style="font-size:12px;font-weight:500;margin-bottom:6px">Routing engine bullet — add "autonomous"</div>
+      <div class="diff-old">Current: "...production multi-model routing engine integrating 5 geocoding providers..."</div>
+      <div class="diff-new">Better: "...production autonomous routing engine — 8 self-healing fallback strategies, real-time confidence scoring..."</div>
+    </div>
+    <div class="card">
+      <div style="font-size:12px;font-weight:500;margin-bottom:6px">Missing bullet — add root cause investigation</div>
+      <div class="diff-new">Add: "Led root cause investigation of an AI model regression — identified two-layer calibration failure, authored executive incident report, produced engineering remediation spec."</div>
+    </div>
+  </div>
+</div>
+
+<div id="ip" class="pane">
+  <div class="sh">Interview prep — Expedia PM, Autonomous Operations</div>
+  <div style="margin-bottom:12px">
+    <div class="q-card" onclick="tq(this,0)">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <div style="font-size:12px;font-weight:500">Tell me about a time you reduced manual operations through automation</div>
+        <span class="tag t-blu" style="flex-shrink:0">Behavioral</span>
+      </div>
+      <div class="q-ans" id="qa0">Answer with the ML-assisted pipeline: 3M+ records, days to hours, 60% rework reduction. Lead with the business problem, not the technical solution. Structure as STAR. End with the metric. Do not start with "I built..."</div>
+    </div>
+    <div class="q-card" onclick="tq(this,1)">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <div style="font-size:12px;font-weight:500">How do you define success metrics for an AI system?</div>
+        <span class="tag t-grn" style="flex-shrink:0">Product sense</span>
+      </div>
+      <div class="q-ans" id="qa1">Answer with your routing engine telemetry. Distinguish leading indicators (confidence score distribution, fallback rate) from lagging indicators (match success rate, API cost). Separate health metrics from outcome metrics. This signals PM maturity.</div>
+    </div>
+    <div class="q-card" onclick="tq(this,2)">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <div style="font-size:12px;font-weight:500">Design a self-healing system for Expedia's search infrastructure</div>
+        <span class="tag t-grn" style="flex-shrink:0">Product sense</span>
+      </div>
+      <div class="q-ans" id="qa2">Framework: define failure modes → instrument telemetry → build confidence thresholds → automate fallbacks → create escalation paths. You built this. Walk through your routing engine design, then apply it to hotel search and partner APIs. Reference your Expedia demo.</div>
+    </div>
+    <div class="q-card" onclick="tq(this,3)">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <div style="font-size:12px;font-weight:500">You're from a startup — how would you operate at Expedia's scale?</div>
+        <span class="tag t-amb" style="flex-shrink:0">Pushback</span>
+      </div>
+      <div class="q-ans" id="qa3">Don't be defensive. "The patterns I designed were built to be scalable from day one because the data volumes forced that thinking. What I'd add is process rigor and stakeholder alignment frameworks that large orgs have codified. Fast learner in structured environments."</div>
+    </div>
+    <div class="q-card" onclick="tq(this,4)">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <div style="font-size:12px;font-weight:500">How do you prioritize a backlog for an AI operations platform?</div>
+        <span class="tag t-grn" style="flex-shrink:0">Product sense</span>
+      </div>
+      <div class="q-ans" id="qa4">Talk through your telemetry-driven roadmap: signal patterns from 300K+ monthly API calls surfaced which fallback strategies were triggering most, which drove what to fix. Connect to their JD: "data-driven insights from monitoring, telemetry, incident patterns to prioritize backlog."</div>
+    </div>
+  </div>
+  <div class="sh">Keywords to use in every answer</div>
+  <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px">
+    <span class="tag t-blu">self-healing</span><span class="tag t-blu">autonomous remediation</span><span class="tag t-blu">observability</span><span class="tag t-blu">confidence scoring</span><span class="tag t-blu">fallback strategy</span><span class="tag t-blu">telemetry signals</span><span class="tag t-blu">failure mode analysis</span><span class="tag t-blu">guardrails</span><span class="tag t-blu">incident triage</span><span class="tag t-blu">SRE partnership</span>
+  </div>
+  <button class="btn-p" onclick="window.open('https://www.meghabhasker.me/expedia-demo.html','_blank')">View Expedia demo to prep ↗</button>
+</div>
+
+<footer class="page-footer">
+  <div class="pf-left">Built by <span>Megha Bhasker</span> · AI Product Manager · Product case study for Jobright.ai PM role</div>
+  <div class="pf-links">
+    <a href="https://meghabhasker.me">Portfolio</a>
+    <a href="https://linkedin.com/in/megha-bhasker">LinkedIn</a>
+    <a href="https://github.com/MeghaBhasker">GitHub</a>
+  </div>
+</footer>
+
+<script>
+var openId=-1,applied=new Set(),h1bOnly=false,appCount=4;
+var agentR={
+  'Why is Expedia my top match?':'Your routing engine is architecturally identical to autonomous operations — 5 providers, 8 self-healing fallbacks, real-time confidence scoring. Your telemetry and responsible AI guardrails match their preferred qualifications almost word-for-word. Main gap: organizational scale.',
+  'Which roles confirm H1B?':'Confirmed: Expedia Group, JPMorgan Chase, Popeyes/RBI. TekWissen contract cannot support H1B. Jobright.ai is unconfirmed — small startup, verify before applying.',
+  'What are my top 3 resume gaps?':'(1) Add "autonomous" to your routing engine bullet — it is the title of the Expedia role. (2) Add a cross-functional/stakeholder leadership bullet — currently missing. (3) Prepare your scale bridge answer for interviews.',
+  'How many applications this week?':'You have '+appCount+' sent. Target is 15. You need '+(15-appCount)+' more. Focus on H1B-confirmed companies with 500+ employees first.',
+  'Should I apply to Jobright?':'95% match on LLM experience. The risk is H1B: under 100 employees, sponsorship costs $5K+ per hire. Email the team to confirm before investing application time.',
+  'Write an outreach message to Expedia recruiter':'Subject: PM Autonomous Operations — application follow-up\n\nHi [Name], I applied for the PM Autonomous Operations role and wanted to connect directly. My background includes building production autonomous routing engines and AI observability systems — work that maps closely to what you are describing. Happy to connect for 10 minutes if useful.'
+};
+function sp(id,tab){
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  if(tab&&tab.classList)tab.classList.add('on');
+}
+function oj(el,i){
+  var d=document.getElementById('d'+i),jc=document.getElementById('jc'+i);
+  if(openId===i){d.classList.remove('open');jc.classList.remove('sel');openId=-1;return;}
+  document.querySelectorAll('.detail').forEach(x=>x.classList.remove('open'));
+  document.querySelectorAll('.job-card').forEach(x=>x.classList.remove('sel'));
+  d.classList.add('open');jc.classList.add('sel');openId=i;
+}
+function applyJob(i,name){
+  if(applied.has(i))return;
+  applied.add(i);
+  document.getElementById('t'+i).textContent='Application queued for '+name+'.';
+  document.getElementById('t'+i).classList.add('show');
+  appCount++;
+  document.getElementById('m-app').textContent=appCount;
+  var need=Math.max(0,15-appCount);
+  document.getElementById('m-app-d').textContent=need>0?need+' more needed':'weekly target hit!';
+  var pct=Math.min(100,Math.round((appCount/15)*100));
+  document.getElementById('wbar').style.width=pct+'%';
+  document.getElementById('wprog-lbl').textContent='Week progress: '+appCount+' / 15 applications';
+}
+function ac(msg){
+  var w=document.getElementById('chatx');
+  var resp=agentR[msg]||'Let me analyze that for your job search strategy.';
+  w.innerHTML+='<div class="msg user" style="margin-top:8px">'+msg+'</div><div class="msg ai" style="margin-top:8px">'+resp+'</div>';
+  document.getElementById('chatwin').scrollTop=9999;
+}
+function sc(){var i=document.getElementById('cinp');var m=i.value.trim();if(!m)return;ac(m);i.value='';}
+function sortJ(type,btn){
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  var list=document.getElementById('jlist');
+  var order=type==='score'?[0,1,2,3]:[1,3,0,2];
+  order.forEach(i=>{list.appendChild(document.getElementById('jc'+i));list.appendChild(document.getElementById('d'+i));});
+}
+function toggleH1b(btn){
+  h1bOnly=!h1bOnly;
+  btn.classList.toggle('on',h1bOnly);
+  var visible=0;
+  document.querySelectorAll('.job-card').forEach(c=>{
+    var hide=h1bOnly&&c.dataset.h1b==='0';
+    c.style.display=hide?'none':'';
+    var d=document.getElementById('d'+c.id.replace('jc',''));
+    if(d)d.style.display=hide?'none':'';
+    if(!hide)visible++;
+  });
+  document.getElementById('jcount').textContent='Showing '+(h1bOnly?'H1B confirmed — ':'')+visible+' jobs';
+}
+function goTailor(i){
+  sp('rp',document.querySelectorAll('.tab')[3]);
+  document.getElementById('rsel').value=i;
+  updateTailor();
+}
+var tailorData={
+  0:{sh:'Critical changes for Expedia Group',cards:[
+    {title:'Summary — rewrite opening',old:'Current: "AI Product Manager with 3+ years shipping AI-integrated platforms..."',new:'Better: "Product Manager with 3+ years shipping autonomous decision systems and AI-integrated platforms..."'},
+    {title:'Routing engine bullet — add "autonomous"',old:'Current: "...production multi-model routing engine integrating 5 geocoding providers..."',new:'Better: "...production autonomous routing engine — 8 self-healing fallback strategies, real-time confidence scoring..."'},
+    {title:'Missing bullet — add root cause investigation',old:null,new:'Add: "Led root cause investigation of an AI model regression — identified two-layer calibration failure, authored executive incident report, produced engineering remediation spec."'}
+  ]},
+  1:{sh:'Critical changes for Jobright.ai',cards:[
+    {title:'Summary — lead with LLM and agentic work',old:'Current: "AI Product Manager with 3+ years shipping AI-integrated platforms..."',new:'Better: "AI Product Manager with 3+ years building LLM-powered tools and AI agents — PM/Spec, BestMove, and production AI routing systems."'},
+    {title:'Projects — move PM/Spec and BestMove to top',old:'Current: PM/Spec and BestMove listed after EarthDefine experience',new:'Better: Move both LLM projects to the top of your projects section — they are your most relevant work for this role.'},
+    {title:'Skills — add agentic workflows and Claude API',old:null,new:'Add to AI Product skills: "Agentic workflow design, Claude API integration, LLM output evaluation, responsible AI for consumer products"'}
+  ]},
+  2:{sh:'Critical changes for JPMorgan Chase',cards:[
+    {title:'Summary — add operational systems framing',old:'Current: "AI Product Manager with 3+ years shipping AI-integrated platforms..."',new:'Better: "Product Manager with 3+ years shipping AI-integrated operational systems — telemetry infrastructure, automated decision pipelines, and responsible AI guardrails."'},
+    {title:'Add portfolio demo reference',old:null,new:'Add to header or summary: "Portfolio includes AI exception management demo for global clearing operations — meghabhasker.me/exception-demo.html"'}
+  ]},
+  3:{sh:'Critical changes for Popeyes LK',cards:[
+    {title:'Summary — add operational technology framing',old:'Current: generic AI PM summary',new:'Better: Lead with "operational systems," "pilot-to-scaled deployment," and "cross-functional execution" — all JD keywords.'},
+    {title:'Location — add relocation note',old:'Current: "Auburn Hills, MI"',new:'Better: "Auburn Hills, MI (Open to relocation: Miami, FL)"'},
+    {title:'Add computer vision callout',old:null,new:'Add to education: "Computer vision background — DSP-based image processing, IEEE published researcher (mask detection system, 2021)"'}
+  ]}
+};
+function updateTailor(){
+  var v=parseInt(document.getElementById('rsel').value);
+  var d=tailorData[v];
+  document.getElementById('tailor-sh').textContent=d.sh;
+  var body=document.getElementById('tailor-body');
+  var cards=body.querySelectorAll('.card');
+  cards.forEach(c=>c.remove());
+  d.cards.forEach(function(c){
+    var el=document.createElement('div');
+    el.className='card';
+    el.innerHTML='<div style="font-size:12px;font-weight:500;margin-bottom:6px">'+c.title+'</div>'+(c.old?'<div class="diff-old">'+c.old+'</div>':'')+'<div class="diff-new">'+c.new+'</div>';
+    body.appendChild(el);
+  });
+}
+function tq(el,i){
+  var ans=document.getElementById('qa'+i);
+  var isOpen=ans.classList.contains('show');
+  document.querySelectorAll('.q-ans').forEach(a=>a.classList.remove('show'));
+  document.querySelectorAll('.q-card').forEach(c=>c.classList.remove('oq'));
+  if(!isOpen){ans.classList.add('show');el.classList.add('oq');}
+}
+function chk(row){
+  var box=row.querySelector('.chk');
+  var txt=row.querySelector('span');
+  box.classList.toggle('done');
+  if(box.classList.contains('done')){
+    box.innerHTML='<i class="ti ti-check" style="font-size:10px;color:'+getComputedStyle(document.documentElement).getPropertyValue('--green')+'"></i>';
+    txt.style.color='var(--text3)';
+  } else {
+    box.innerHTML='';
+    txt.style.color='var(--text)';
+  }
+}
+</script>
+</body>
+</html>
